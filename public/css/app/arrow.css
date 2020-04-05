@@ -1,0 +1,158 @@
+/*
+  ARROWCSSCOMPILATIONBYTOSAMCHAH
+*/
+
+/*whitearrow*/
+.l-lg-wh {border-color: transparent rgba(255,255,255,1);border-width: 20px 20px 20px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-lg-wh {border-color: transparent rgba(255,255,255,1);border-width: 20px 0px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+.d-lg-wh {border-color: rgba(255,255,255,1) transparent;border-width: 20px 20px 0px 20px;border-style: solid;height: 0px;width: 0px;}
+.u-lg-wh {border-color: rgba(255,255,255,1) transparent;border-width: 0px 20px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+
+
+.l-md-wh {border-color: transparent rgba(255,255,255,1);border-width: 15px 15px 15px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-md-wh {border-color: transparent rgba(255,255,255,1);border-width: 15px 0px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+.d-md-wh {border-color: rgba(255,255,255,1) transparent;border-width: 15px 15px 0px 15px;border-style: solid;height: 0px;width: 0px;}
+.u-md-wh {border-color: rgba(255,255,255,1) transparent;border-width: 0px 15px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+
+
+.l-sm-wh {border-color: transparent rgba(255,255,255,1);border-width: 10px 10px 10px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-sm-wh {border-color: transparent rgba(255,255,255,1);border-width: 10px 0px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+.d-sm-wh {border-color: rgba(255,255,255,1) transparent;border-width: 10px 10px 0px 10px;border-style: solid;height: 0px;width: 0px;}
+.u-sm-wh {border-color: rgba(255,255,255,1) transparent;border-width: 0px 10px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+
+/* WHITE ARROW*/
+
+
+
+
+
+/*ggreenarrow*/
+.l-lg-gr {border-color: transparent rgba(55,205,155,1);border-width: 20px 20px 20px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-lg-gr {border-color: transparent rgba(55,205,155,1);border-width: 20px 0px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+.d-lg-gr {border-color: rgba(55,205,155,1) transparent;border-width: 20px 20px 0px 20px;border-style: solid;height: 0px;width: 0px;}
+.u-lg-gr {border-color: rgba(55,205,155,1) transparent;border-width: 0px 20px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+
+
+.l-md-gr {border-color: transparent rgba(55,205,155,1);border-width: 15px 15px 15px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-md-gr {border-color: transparent rgba(55,205,155,1);border-width: 15px 0px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+.d-md-gr {border-color: rgba(55,205,155,1) transparent;border-width: 15px 15px 0px 15px;border-style: solid;height: 0px;width: 0px;}
+.u-md-gr {border-color: rgba(55,205,155,1) transparent;border-width: 0px 15px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+
+
+.l-sm-gr {border-color: transparent rgba(55,205,155,1);border-width: 10px 10px 10px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-sm-gr {border-color: transparent rgba(55,205,155,1);border-width: 10px 0px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+.d-sm-gr {border-color: rgba(55,205,155,1) transparent;border-width: 10px 10px 0px 10px;border-style: solid;height: 0px;width: 0px;}
+.u-sm-gr {border-color: rgba(55,205,155,1) transparent;border-width: 0px 10px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+
+/* ggreen ARROW*/
+
+
+
+/*redarrow*/
+.l-lg-rd {border-color: transparent #f44336;border-width: 20px 20px 20px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-lg-rd {border-color: transparent #f44336;border-width: 20px 0px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+.d-lg-rd {border-color: #f44336 transparent;border-width: 20px 20px 0px 20px;border-style: solid;height: 0px;width: 0px;}
+.u-lg-rd {border-color: #f44336 transparent;border-width: 0px 20px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+
+
+.l-md-rd {border-color: transparent #f44336;border-width: 15px 15px 15px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-md-rd {border-color: transparent #f44336;border-width: 15px 0px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+.d-md-rd {border-color: #f44336 transparent;border-width: 15px 15px 0px 15px;border-style: solid;height: 0px;width: 0px;}
+.u-md-rd {border-color: #f44336 transparent;border-width: 0px 15px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+
+
+.l-sm-rd {border-color: transparent #f44336;border-width: 10px 10px 10px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-sm-rd {border-color: transparent #f44336;border-width: 10px 0px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+.d-sm-rd {border-color: #f44336 transparent;border-width: 10px 10px 0px 10px;border-style: solid;height: 0px;width: 0px;}
+.u-sm-rd {border-color: #f44336 transparent;border-width: 0px 10px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+
+/* red ARROW*/
+
+
+
+
+
+
+
+
+/*bluearrow*/
+.l-lg-bl {border-color: transparent rgba(50,155,255,1);border-width: 20px 20px 20px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-lg-bl {border-color: transparent rgba(50,155,255,1);border-width: 20px 0px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+.d-lg-bl {border-color: rgba(50,155,255,1) transparent;border-width: 20px 20px 0px 20px;border-style: solid;height: 0px;width: 0px;}
+.u-lg-bl {border-color: rgba(50,155,255,1) transparent;border-width: 0px 20px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+
+.l-md-bl {border-color: transparent rgba(50,155,255,1);border-width: 15px 15px 15px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-md-bl {border-color: transparent rgba(50,155,255,1);border-width: 15px 0px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+.d-md-bl {border-color: rgba(50,155,255,1) transparent;border-width: 15px 15px 0px 15px;border-style: solid;height: 0px;width: 0px;}
+.u-md-bl {border-color: rgba(50,155,255,1) transparent;border-width: 0px 15px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+
+.l-sm-bl {border-color: transparent rgba(50,155,255,1);border-width: 10px 10px 10px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-sm-bl {border-color: transparent rgba(50,155,255,1);border-width: 10px 0px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+.d-sm-bl {border-color: rgba(50,155,255,1) transparent;border-width: 10px 10px 0px 10px;border-style: solid;height: 0px;width: 0px;}
+.u-sm-bl {border-color: rgba(50,155,255,1) transparent;border-width: 0px 10px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+
+/* blue ARROW*/
+
+
+
+/*bluearrow*/
+.l-lg-or {border-color: transparent orange;border-width: 20px 20px 20px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-lg-or {border-color: transparent orange;border-width: 20px 0px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+.d-lg-or {border-color: orange transparent;border-width: 20px 20px 0px 20px;border-style: solid;height: 0px;width: 0px;}
+.u-lg-or {border-color: orange transparent;border-width: 0px 20px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+
+.l-md-or {border-color: transparent orange;border-width: 15px 15px 15px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-md-or {border-color: transparent orange;border-width: 15px 0px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+.d-md-or {border-color: orange transparent;border-width: 15px 15px 0px 15px;border-style: solid;height: 0px;width: 0px;}
+.u-md-or {border-color: orange transparent;border-width: 0px 15px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+
+.l-sm-or {border-color: transparent orange;border-width: 10px 10px 10px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-sm-or {border-color: transparent orange;border-width: 10px 0px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+.d-sm-or {border-color: orange transparent;border-width: 10px 10px 0px 10px;border-style: solid;height: 0px;width: 0px;}
+.u-sm-or {border-color: orange transparent;border-width: 0px 10px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+
+/* blue ARROW*/
+
+
+
+
+/*bluearrow*/
+.l-lg-pp {border-color: transparent purple;border-width: 20px 20px 20px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-lg-pp {border-color: transparent purple;border-width: 20px 0px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+.d-lg-pp {border-color: purple transparent;border-width: 20px 20px 0px 20px;border-style: solid;height: 0px;width: 0px;}
+.u-lg-pp {border-color: purple transparent;border-width: 0px 20px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+
+.l-md-pp {border-color: transparent purple;border-width: 15px 15px 15px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-md-pp {border-color: transparent purple;border-width: 15px 0px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+.d-md-pp {border-color: purple transparent;border-width: 15px 15px 0px 15px;border-style: solid;height: 0px;width: 0px;}
+.u-md-pp {border-color: purple transparent;border-width: 0px 15px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+
+.l-sm-pp {border-color: transparent purple;border-width: 10px 10px 10px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-sm-pp {border-color: transparent purple;border-width: 10px 0px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+/*.d-sm-pp {width:200px;height: 100px;background:#777;}*/
+.u-sm-pp {border-color: purple transparent;border-width: 10px 10px 0px 10px;border-style: solid;height: 0px;width: 0px;}
+.u-sm-pp {border-color: purple transparent;border-width: 0px 10px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+
+/* blue ARROW*/
+
+
+
+
+
+/*bluearrow*/
+.l-lg-tl {border-color: transparent #00838f;border-width: 20px 20px 20px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-lg-tl {border-color: transparent #00838f;border-width: 20px 0px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+.d-lg-tl {border-color: #00838f transparent;border-width: 20px 20px 0px 20px;border-style: solid;height: 0px;width: 0px;}
+.u-lg-tl {border-color: #00838f transparent;border-width: 0px 20px 20px 20px;border-style: solid;height: 0px;width: 0px;}
+
+.l-md-tl {border-color: transparent #00838f;border-width: 15px 15px 15px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-md-tl {border-color: transparent #00838f;border-width: 15px 0px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+.d-md-tl {border-color: #00838f transparent;border-width: 15px 15px 0px 15px;border-style: solid;height: 0px;width: 0px;}
+.u-md-tl {border-color: #00838f transparent;border-width: 0px 15px 15px 15px;border-style: solid;height: 0px;width: 0px;}
+
+.l-sm-tl {border-color: transparent #00838f;border-width: 10px 10px 10px 0px;border-style: solid;height: 0px;width: 0px;}
+.r-sm-tl {border-color: transparent #00838f;border-width: 10px 0px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+.d-sm-tl {border-color: #00838F transparent;border-width: 10px 10px 0px 10px;border-style: solid;height: 0px;width: 0px;}
+.u-sm-tl {border-color: #00838f transparent;border-width: 0px 10px 10px 10px;border-style: solid;height: 0px;width: 0px;}
+
+/* blue ARROW*/

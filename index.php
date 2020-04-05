@@ -1,3 +1,5 @@
-jkjkj
+<?php 
 
-jkkhjhiuhiu hiu
+include_once 'libraries/int.app.autoloader.out.php';
+
+new bootstrap;
