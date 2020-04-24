@@ -1,21 +1,22 @@
 <?php
 
 /**
- * 
+ *
  */
-class Bootstrap 
+class Bootstrap extends App\Market\Config\AppAuthenticate
 {
 	public $url;
     public $dir;
     public $param;
     public $controller;
-    public $system_urls = ['home', 'category', 'cart', 'checkout', 'shop', 'pg', 'product', 'profile', 'dash', 'pg', 'qr', 'about', 'help', 'faq', 'theme'];
+    // public $system_urls = \App\MarketAppAuthenticate::system_urls;//['home', 'setup', 'filehandler', 'register', 'post', 'get', 'category', 'cart', 'checkout', 'shop', 'pg', 'product', 'profile', 'dash', 'pg', 'qr', 'about', 'help', 'faq', 'theme'];
     public $response;
     public $homeControllerUrl = 'controllers/controller.index.php';
-	
+
 	function __construct()
 	{
 		// start engine
+		parent::__construct();
 		$this->intV8Engine();
 	}
 
@@ -33,10 +34,10 @@ class Bootstrap
 
 	            $urlLower = strtolower($url);
 	            $urlLowerExp = explode('/', $urlLower);
-	            
+
 	            $controllerName = $urlLowerExp[0];
-	            
-	            if(in_array($controllerName, $this->system_urls)){ 
+
+	            if(in_array($controllerName, $this->system_urls)){
 
 	            	$controllerFileName = 'controller.'.$controllerName.'.php';
 	            	// include controller
@@ -44,7 +45,7 @@ class Bootstrap
 
 	            	// initaite crawler
 	            	$controllerClass = ucfirst($controllerName);
-	            	
+
 	            	$controller = new $controllerClass();
 	            	// check if we have pointing method
 
@@ -85,7 +86,7 @@ class Bootstrap
 	        	include_once $this->homeControllerUrl;
 	        	$homeController = new Index();
 	        	$homeController->intHome();
-	        	
+
 	        }
 		} else { // load home page
 			include_once $this->homeControllerUrl;

@@ -4,7 +4,7 @@
 /**
  * Index moel
  */
-class IndexModel extends \App\Market\Libraries\Models
+class FileHandlerModel extends  \App\Market\Libraries\Models
 {
 
 	function __construct()

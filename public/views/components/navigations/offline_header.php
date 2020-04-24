@@ -1,12 +1,12 @@
 
 <!DOCTYPE html>
 <html>
-    <head> 
+    <head>
         <title><?php echo @$this->pageTitle ?: 'Welcome to Njofa'; ?></title>
         <!-- flavicon and app icon  -->
 
      <!-- meta tags -->
-        <?php 
+        <?php
 
         if(!empty($this->meta)){
             echo $this->meta;
@@ -55,8 +55,8 @@
 
 
         <?php
-            if(@isset($this->css) && is_array($this->css) && count($this->css) > 0){
-                foreach ($this->css as $key => $url) {
+            if(@isset($this->loadCss) && is_array($this->loadCss) && count($this->loadCss) > 0){
+                foreach ($this->loadCss as $key => $url) {
                     echo '<link rel="stylesheet" type="text/css" href="'.$url.'">';
                 }
             }
@@ -67,7 +67,7 @@
         <link rel="stylesheet" type="text/css" href="/public/css/app/style.css">
         <link rel="stylesheet" type="text/css" href="/public/css/app/wallet.theme.css">
 
-                
+
         <!-- include css -->
 	<!-- JS PLUGIN -->
 	<script type="text/javascript" src="/public/js/libraries/jquery.min.js"></script>
@@ -110,7 +110,7 @@
 
       <div class="p-0 col-2 col-md-4 col-lg-4 d-none border-0 d-md-block">
         <div class="d-flex flex-wrap justify-content-end w-100 ">
-          
+
           <div class="mx-1 text-hv-third  px-2  _cont_36 _text_12">
             <span class="notify bg-third">5</span>
             <img src="/public/img/app/ck_fm_avatar.png" class="rounded-circle float-left mr-2" height="36px">
@@ -160,9 +160,9 @@
   <div class="container">
     <div class="d-flex w-100 py-2 ">
       <div class="p-0 col-4 col-md-3 col-lg-2 align-self-center">
-        <div class="d-flex justify-content-start ">  
+        <div class="d-flex justify-content-start ">
           <div class=" align-self-center pr-3 " id="sidebarCollapse">
-            <i class="fa fa-bars"></i> 
+            <i class="fa fa-bars"></i>
           </div>
           <div class="_text_14" >
             <select class="custom-select border-0 border-right rounded-0">
@@ -210,7 +210,7 @@
 
 
 <!-- header -->
-  
+
   <div class="wrapper">
     <!-- Sidebar -->
     <nav id="sidebar" class="scroll-sm bg-light">
@@ -220,7 +220,7 @@
         </div>
 
         <div class="sidebar-header bg-main  px-2">
-          <img src="/public/img/app/ck_fm_avatar.png" height="30px;" class="float-left mr-2"> 
+          <img src="/public/img/app/ck_fm_avatar.png" height="30px;" class="float-left mr-2">
           <div class="align-self-center" style="line-height: 35px;font-weight: 700">
             <b>Hello, Sign in</b>
           </div>
@@ -270,7 +270,7 @@
                 <a href="#">Contact</a>
             </li>
 
-           
+
         </ul>
 
 
@@ -307,11 +307,17 @@
     <div class="overlay"></div>
 </div>
 
-
-
+<!-- add additional header -->
+<?php
+  if(count($this->subHeader) > 0){
+    foreach ($this->subHeader as $key => $headerSubFile) {
+      include_once $headerSubFile;
+    }
+  }
+ ?>
 
 <!-- alert boxed -->
-<?php 
+<?php
   if($this->alertStatus == true){
     echo '<div class="container p-2 my-3"><div class="alert alert-danger p-3">'.$this->alertMessage.'</div></div>';
   }
@@ -324,7 +330,7 @@
 
 
 <!-- share links -->
-<div class="sharethis-inline-share-buttons"></div> 
+<div class="sharethis-inline-share-buttons"></div>
 <!-- share links -->
 
 

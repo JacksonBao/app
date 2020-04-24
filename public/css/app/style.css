@@ -1,4 +1,38 @@
 
+  /*// snack bar*/
+  #snackbar, .snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+.snackbar-success{
+  background: #00ff88 !important;
+}
+.snackbar-danger{
+  background: #ff3300 !important;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+
+/*// badges*/
+
+
 .badge-right-cont{
     position: absolute;
     right: 5px;
@@ -11,6 +45,9 @@
     height: 30px !important;width: 30px !important;line-height: 30px !important;
 }
 
+.dropdown-menu {
+border: 0px !important;
+}
 /*-------------------------------------------------------
             CARDS
 --------------------------------------------------------*/
@@ -95,7 +132,7 @@
 /*----------------------------------------------------
     MEDIA SCREENS
 ------------------------------------------------------*/
-    
+
 /*xs*/
 @media (max-width: 576px) {
 .c_cat_main_cont {
@@ -133,7 +170,7 @@
     }
 }
 /*lg*/
-@media (min-width: 1200px) { 
+@media (min-width: 1200px) {
     .c_cat_main_cont {
         height: 35vw;
 
@@ -141,7 +178,7 @@
 }
 
 /*lg*/
-@media (min-width: 1500px) { 
+@media (min-width: 1500px) {
 
 }
 
@@ -306,4 +343,4 @@ ul.footerList li > a, ul.footerList li  {
     font-size: 12px;
     font-weight: 600;
 
-} 
+}

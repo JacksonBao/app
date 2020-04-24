@@ -1,6 +1,7 @@
 <?php
+namespace App\Market\Traits;
 
-Trait  MetaTags{ 
+Trait  MetaTags{
 	public $metaTagList = [];
 	public $metaTags = '';
 	public $metaUrl = '';
@@ -45,14 +46,14 @@ Trait  MetaTags{
 			} elseif($title == 'site_name' || $title == 'url' || $title == "type"){
 			$ogTags .= '
 			<meta property="og:'.$title.'" content="'.$content.'" />
-			'; 
+			';
 			continue;
-			} 
+			}
 
 			if($title=='description'){
 			$metadesc = '<meta name="description" content="'.$content.'">
 			';
-			} 
+			}
 
 			$metaLink .= '
 			<meta itemprop="'.$title.'" content="'.$content.'" />
@@ -68,7 +69,7 @@ Trait  MetaTags{
 
 			$this->metaTags = $metadesc.' <!-- Google / Search Engine Tags --> '. $metaLink.' <!-- Facebook Meta Tags --> '.$ogTags.'  <!-- Twitter Meta Tags --> '.$twitter;
 
-			}	
+			}
 			return $this->metaTags;
 		}
 

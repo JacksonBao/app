@@ -1,11 +1,12 @@
-<?php 
+<?php
+namespace App\Market\Traits;
 
 Trait ErrorHandler{
 
 	public $alertMessage = '';
 	public $alertStatus = false;
 	public $errorCard = '';
-	
+
 
 	public function errorMethodMessage($name = '')
 	{
@@ -17,7 +18,7 @@ Trait ErrorHandler{
 	{
 		echo 'Controller error <br>';
 		var_dump($this->urlInView);
-		
+
 	}
 
 

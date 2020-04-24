@@ -2,6 +2,13 @@ body.bg{
 	background-color: #eaeded !important;
 }
 
+
+.page-item.active .page-link {
+	background: #fdd947 !important;
+	color: #444444 !important;
+	border-color: #fdd947 !important;
+}
+
 .bg-main, .btn-main, .alert-main, .badge-main, .bg-hv-main:hover {
 	background: #444444 !important;
 	color: #fefefe !important;
@@ -33,7 +40,7 @@ body.bg{
 	color: #444444 !important;
 }
 
-.bg-third, .btn-third, .alert-third, .badge-third, .bg-hv-third:hover{
+.bg-third, .btn-third, .alert-third, .badge-third, .bg-hv-third:hover, .list-group-item.active{
 	background: #fdd947 !important;
 	color: #444444 !important;
 }
@@ -61,12 +68,13 @@ a:hover{
 
 
 /*;border*/
- 
+
  .border-main, .border-hv-main:hover {border-color: #252525 !important;}
  .border-secondary, .border-hv-secondary:hover {border-color: #d5d5d3 !important;}
  .border-light, .border-hv-light:hover {border-color: #fefefe !important;}
  .border-dark, .border-hv-dark:hover {border-color: #444444 !important;}
- .border-third, .border-hv-third:hover {border-color: #fdd947 !important;}
+ .border-third, .border-hv-third:hover, .list-group-item.active {border-color: #fdd947 !important;}
+
 
  /**/
  .rounded-pill {
@@ -107,6 +115,46 @@ h4, h5{
 }
 
 
+
+
+/*  */
+/*the container must be positioned relative:*/
+.autocomplete {
+  position: relative;
+  display: inline-block;
+	width: 100%;
+}
+
+
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+  background-color: #e9e9e9;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
 
 /*xs*/
 @media (max-width: 576px) {
@@ -161,17 +209,16 @@ h4, h5{
 }
 }
 /*lg*/
-@media (min-width: 1200px) { 
+@media (min-width: 1200px) {
 .container {
     max-width: 100% !important;
 }
 }
 
 /*lg*/
-@media (min-width: 1500px) { 
+@media (min-width: 1500px) {
 .container {
     max-width: 1200px !important;
 }
 
 }
-

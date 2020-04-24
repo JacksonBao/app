@@ -3,16 +3,16 @@
 /**
  * WALLET HOME CONTROLLER
  */
-class Index extends Controller
+class Index extends  \App\Market\Libraries\Controller
 {
-	
+
 
 	function __construct()
 	{
 		parent::__construct('index');
 		$this->pageTitle = 'Welcome to Njofa Wallet V8.0.1';
 		// load parent model
-		include_once 'models/model.index.php';	
+		include_once 'models/model.index.php';
 		$this->model = new IndexModel();
 	}
 

@@ -3,7 +3,9 @@
 
 <!-- modal -->
 
-
+<!-- snack bar -->
+<div class="snackbar" id="snackbar"></div>
+<!-- snack bar -->
 
 
 <!-- recently viewed products -->
@@ -11,10 +13,10 @@
   <div class="container py-3">
     <div class="_text_21 mb-3">Recently Viewed products</div>
     <div class="d-flex flex-wrap">
-      
 
 
-      
+
+
   <!-- cart product -->
   <div class="col-6 col-lg-2 p-1">
     <div class="card">
@@ -28,10 +30,10 @@
 
         <div class="rating-wrap d-flex w-100 w3-small">
             <ul class="rating-stars list-unstyled mr-3">
-              <li style="" class="stars-active"> 
-                <i class="fa fa-star text-third"></i> <i class="fa fa-star  text-third"></i> 
-                <i class="fa fa-star  text-third"></i> <i class="fa fa-star  text-third"></i> 
-                <i class="fa fa-star"></i> 
+              <li style="" class="stars-active">
+                <i class="fa fa-star text-third"></i> <i class="fa fa-star  text-third"></i>
+                <i class="fa fa-star  text-third"></i> <i class="fa fa-star  text-third"></i>
+                <i class="fa fa-star"></i>
               </li>
             </ul>
           <div class="label-rating">4/5</div>
@@ -56,10 +58,10 @@
 
         <div class="rating-wrap d-flex w-100 w3-small">
             <ul class="rating-stars list-unstyled mr-3">
-              <li style="" class="stars-active"> 
-                <i class="fa fa-star text-third"></i> <i class="fa fa-star  text-third"></i> 
-                <i class="fa fa-star  text-third"></i> <i class="fa fa-star  text-third"></i> 
-                <i class="fa fa-star"></i> 
+              <li style="" class="stars-active">
+                <i class="fa fa-star text-third"></i> <i class="fa fa-star  text-third"></i>
+                <i class="fa fa-star  text-third"></i> <i class="fa fa-star  text-third"></i>
+                <i class="fa fa-star"></i>
               </li>
             </ul>
           <div class="label-rating">4/5</div>
@@ -132,7 +134,7 @@
            <button class="btn btn-light pr-5" style="font-size: 11px;line-height: 10px;font-weight: 600">
               <ion-icon name="logo-apple" class="float-left mr-1" style="line-height: 19px;font-size: 20px;"></ion-icon>
               <div>
-                <small>Available on the</small> <br> APP Store 
+                <small>Available on the</small> <br> APP Store
               </div>
             </button>
         </div>
@@ -140,7 +142,7 @@
             <button class="btn btn-success pr-5" style="font-size: 11px;line-height: 10px;font-weight: 600">
               <ion-icon name="logo-google-playstore" class="float-left mr-1" style="line-height: 19px;font-size: 20px;"></ion-icon>
               <div>
-                <small>Available on the</small> <br> Google Play 
+                <small>Available on the</small> <br> Google Play
               </div>
             </button>
         </div>
@@ -171,7 +173,7 @@
     <div class="footer-copyright text-center opacity-8 py-3 bg-dark"  style="font-weight: 600px;font-size: 12px;">
 
     <div class="row py-2 w3-center">
-      
+
       <div class="col-12">
         <div class="d-flex justify-content-center w3-small">
           <div class="pr-3 py-3">Terms of Use</div>
@@ -201,8 +203,8 @@
 
 <div class="snackbar" id="snackbar"></div>
 
-<?php 
-// echo $this->func->rightButtons(); 
+<?php
+// echo $this->func->rightButtons();
 ?>
 
 <!--include javascripts-->
@@ -216,22 +218,22 @@
 
 
   <!-- JS PLUGIN -->
-<script type="text/javascript" src="public/js/libraries/lightbox.min.js"></script>
+<script type="text/javascript" src="/public/js/libraries/lightbox.min.js"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.4/plyr.min.js"></script> -->
-     
+
 <!--include javascripts-->
 
-    <?php 
+    <?php
 
     foreach ($this->loadJs as $key => $value){
         if($key == 'main'){
             foreach($value as $ky => $file){
-                $file = 'public/js/app/' . $file;
+                $file = '/public/js/app/' . $file;
                 echo '<script src="'.$file.'"> </script>';
-              
+
             }
         } else {
-       
+
                // note for other source make sure to include the full path
              if($key == 'link'){
                  $link = $this->loadJs['link'];
@@ -239,25 +241,28 @@
                   if(array_key_exists('Files', $this->loadJs)){
                  foreach ($this->loadJs['Files'] as $k => $fileArr){
                    $files = $link.$fileArr;
-                  
+
                 if(file_exists($files)){
                      echo '<script src="'.$files.'"> </script>';
-                    } 
+                    }
                  }
                  }
-               
+
              } elseif($key == 'root') {
                    foreach($value as $ky => $file){
-                   if(file_exists($file)){
-                       
+                   if(file_exists($file) || str_replace('http', '', $file)){
                     echo '<script src="'.$file.'"> </script>';
                }
              }
             }
         }
 }
+
+if (!empty($this->runJsFunction)) {
+  echo '<script>' .$this->runJsFunction. "</script>";
+}
 ?>
-     
+
 <!--include javascripts-->
 
 </body>
