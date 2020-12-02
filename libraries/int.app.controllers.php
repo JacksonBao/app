@@ -1,12 +1,12 @@
 <?php
-namespace App\Market\Libraries;
+namespace App\APP_NAME\Libraries;
 
 /**
  *
  */
-class Controller extends \App\Market\Config\AppAuthenticate
+class Controller extends \App\APP_NAME\Config\AppAuthenticate
 {
- Use \App\Market\Traits\View, \App\Market\Traits\ErrorHandler;
+ Use \App\APP_NAME\Traits\View, \App\APP_NAME\Traits\ErrorHandler;
 
 	public $directory;
 	public $file;

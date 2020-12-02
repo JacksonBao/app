@@ -3,7 +3,7 @@
 /**
  * WALLET HOME CONTROLLER
  */
-class Setup extends  \App\Market\Libraries\Controller
+class Setup extends  \App\APP_NAME\Libraries\Controller
 {
 
 
@@ -40,6 +40,18 @@ class Setup extends  \App\Market\Libraries\Controller
 			$this->body = $this->model->getModelTables($param);
 		}
 		$this->render('index');
+	}
+
+	public function engineErrors(array $param = [])
+	{
+
+		if(count($param) > 0 && $param[0] == 'generate'){
+			$this->body = $this->model->generateEngineErrorFiles();
+		} else {
+			$this->body = $this->model->getEngineErrorFiles($param);
+		}
+		$this->render('index');
+		
 	}
 
 }

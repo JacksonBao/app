@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Market\Config;
+namespace App\APP_NAME\Config;
 /**
 *
 */
-define('PAGE_GLOBAL_KEY', 'YhOLEBdTU1PvxHg9lIEJqKVi4xxXFv02');
+define('WALLET_GLOBAL_KEY', 'YhOLEBdTU1PvxHg9lIEJqKVi4xxXFv02');
 define('PASSWORD_APPEND', '1PvxHg9lIEJq');
 
 Trait StringEncrypt
@@ -27,7 +27,7 @@ Trait StringEncrypt
 		return $val;
 	}
 
-	public function encryptString(string $str, string $ky)
+	public function encryptString($str, string $ky)
 	{
 			$ky = preg_replace('#[ ]#i', '', $ky);
 			$len = openssl_cipher_iv_length($cipher = "AES-128-CBC");
@@ -45,9 +45,9 @@ Trait StringEncrypt
 			return $cdata;
 	}
 
-	public function decryptString(string $str, string $ky)
+	public function decryptString($str, string $ky)
 	{
-
+			if(is_bool($str) || empty($str)){return $str;}
 			$ky = preg_replace('#[ ]#i', '', $ky);
 			if (count(explode('<<<', $str)) == 2 && count(explode('>>>', $str)) == 2) {
 				# code...

@@ -1,5 +1,5 @@
 <?php
-namespace App\Market\Traits;
+namespace App\APP_NAME\Traits;
 /**
  *
  */

@@ -11,10 +11,10 @@ include_once 'libraries/traits/app.controller.model.traits.php';
 
 
 
-class SetupModel extends \App\Market\Libraries\Models
+class SetupModel extends \App\APP_NAME\Libraries\Models
 {
-	use \App\Market\Traits\ControllerModel;
-	use \App\Market\Traits\ModelTables;
+	use \App\APP_NAME\Traits\ControllerModel;
+	use \App\APP_NAME\Traits\ModelTables;
 	function __construct()
 	{
 		parent::__construct();
@@ -42,7 +42,7 @@ class SetupModel extends \App\Market\Libraries\Models
 					</div>
 					<div class="py-5 text-center">
 						<p class="mb-3">Generate all files </p>
-						<a href="conmodel/generate" class="btn btn-third">GENERATE ALL</a>
+						<a href="/setup/conmodel/generate" class="btn btn-third">GENERATE ALL</a>
 
 					</div>
 				</div>
@@ -55,7 +55,7 @@ class SetupModel extends \App\Market\Libraries\Models
 		$sql = "SHOW TABLES FROM $this->database";
 		$result = $this->in_query($sql);
 		while ($row = mysqli_fetch_row($result)) {
-		  $table = str_replace(['nj_mp_', '_'], ['', '.'], $row[0]);
+		  $table = str_replace(['nj_wl_', '_'], ['', '.'], $row[0]);
 			// check if file apc_exists
 			$file = 'models/db.tables/db.' . $table . '.php';
 			if(file_exists($file)){
@@ -75,7 +75,7 @@ class SetupModel extends \App\Market\Libraries\Models
 			</div>
 			<div class="py-5 text-center">
 				<p class="mb-3">Generate all files </p>
-				<a href="tables/generate" class="btn btn-third">GENERATE ALL</a>
+				<a href="/setup/tables/generate" class="btn btn-third">GENERATE ALL</a>
 
 			</div>
 		</div>
@@ -110,7 +110,7 @@ public function generateControllerModel()
 		</div>
 		<div class="py-5 text-center">
 			<p class="mb-3">Generate all files </p>
-			<a href="tables/generate" class="btn btn-third">GENERATE ALL</a>
+			<a href="/setup/tables/generate" class="btn btn-third">GENERATE ALL</a>
 
 		</div>
 	</div>
@@ -126,7 +126,7 @@ public function generateTableModels()
 			$result = $this->in_query($sql);
 			if(mysqli_num_rows($result) > 0) {
 			while ($row = mysqli_fetch_row($result)) {
-				$table = str_replace(['nj_mp_', '_'], ['', '.'], $row[0]);
+				$table = str_replace(['nj_wl_', '_'], ['', '.'], $row[0]);
 				// check if file apc_exists
 				$file = 'models/db.tables/db.' . $table . '.php';
 				if(!file_exists($file)){
@@ -152,13 +152,78 @@ public function generateTableModels()
 			</div>
 			<div class="py-5 text-center">
 				<p class="mb-3">Generate all files </p>
-				<a href="tables/generate" class="btn btn-third">GENERATE ALL</a>
+				<a href="/setup/tables/generate" class="btn btn-third">GENERATE ALL</a>
 
 			</div>
 		</div>
 			';
 }
 
+public function generateEngineErrorFiles()
+{
+	$list = '';
+	$urlList = $this->system_urls;
+	foreach ($urlList as $key => $meth) {
+		// $file = 'controllers/controller.'.$meth.'.php';
+		$file = 'models/app.engine.models/app.engine.errors/'.$meth.'_errors/error_en.php';// controller.'.$meth.'.php';
+		if(!file_exists($file)){
+			$this->generateErrorFiles($meth);
+			$list .= '<li class="list-group-item bg-light">'.ucwords($meth).': '.$file.'</li>';
+		}
+	}
+
+		if(empty($list)) {
+			$list = '<h4 class="display-4">You are all caught up</h4>';
+		} else {
+			$list = '<li><h4>Files created successfully.</h4></li> ' . $list;
+		}
+
+		return '
+		<div class="py-2 mb-3 border-bottom"><h4>Tables</h4></div>
+		<div class="py-2 mb-2">
+			<ul class="list-group text-main">
+			'.$list.'
+			</ul>
+		</div>
+		<div class="py-5 text-center">
+			<p class="mb-3">Generate all files </p>
+			<a href="/setup/tables/generate" class="btn btn-third">GENERATE ALL</a>
+
+		</div>
+	</div>
+		';
+	
+}
+
+public function getEngineErrorFiles()
+{
+	
+	$exist = ''; $notAvailable = '';
+	$urlList = $this->system_urls;
+	foreach ($urlList as $key => $meth) {
+		$file = 'models/app.engine.models/app.engine.errors/'.$meth.'_errors/error_file_en.php';// controller.'.$meth.'.php';
+		if(file_exists($file)){
+			$exist .= '<li class="list-group-item bg-light">'.ucwords($meth).'</li>';
+		} else {// files does not exist
+			$notAvailable .= '<li class="list-group-item bg-dark">'.ucwords($meth).'</li>';
+		}
+	}
+				return '
+				<div class="py-2 mb-3 border-bottom"><h4>Tables</h4></div>
+				<div class="py-2 mb-2">
+					<ul class="list-group text-main">
+					'.$notAvailable.'
+					'.$exist.'
+					</ul>
+				</div>
+				<div class="py-5 text-center">
+					<p class="mb-3">Generate all files </p>
+					<a href="/setup/engineErrors/generate" class="btn btn-third">GENERATE ALL</a>
+
+				</div>
+			</div>
+				';
+}
 
 
 }

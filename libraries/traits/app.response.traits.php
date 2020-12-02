@@ -1,10 +1,12 @@
 <?php
 namespace App\APP_NAME\Traits;
 
-Trait ErrorHandler{
+Trait RespondHandler{
 
-	public $alertMessage = '';
-	public $alertStatus = false;
+	public $alertErrorMessages = '';
+	public $alertSuccessMessages = '';
+	public $alertError = false;
+	public $alertSuccess = false;
 	public $errorCard = '';
 
 
@@ -16,14 +18,15 @@ Trait ErrorHandler{
 
 	public function errorControllerMessage()
 	{
-		$this->directory = 'error';
-		$this->render('controller', 0);
+		echo 'Controller error <br>';
+		var_dump($this->urlInView);
 
 	}
 
 
 	public function errorPage()
 	{
-		$this->errorControllerMessage();
+		echo 'errorPage <br> ';
+		var_dump($this->urlInView);
 	}
 }

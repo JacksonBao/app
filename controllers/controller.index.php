@@ -3,7 +3,7 @@
 /**
  * WALLET HOME CONTROLLER
  */
-class Index extends  \App\Market\Libraries\Controller
+class Index extends  \App\APP_NAME\Libraries\Controller
 {
 
 

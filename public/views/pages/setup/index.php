@@ -16,8 +16,9 @@
       <div class="py-2 mb-3 border-bottom"><h4>Links</h4></div>
       <div class="py-2">
         <ul class="list-group text-main">
-          <li class="list-group-item"><a href="conmodel">Controller & Models</a></li>
-          <li class="list-group-item"><a href="tables">Database files</a></li>
+          <li class="list-group-item"><a href="/setup/conmodel">Controller & Models</a></li>
+          <li class="list-group-item"><a href="/setup/tables">Database files</a></li>
+          <li class="list-group-item"><a href="/setup/engineErrors">Error files</a></li>
         </ul>
       </div>
       </div>

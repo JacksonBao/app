@@ -1,114 +1,72 @@
 <?php
-namespace App\Market\Libraries;
+
+namespace App\APP_NAME\Libraries;
 
 /**
-*
-*/
+ *
+ */
 // include models
-include_once 'libraries/int.app.autoloader.in.php';
+include_once getcwd() . '/libraries/int.app.autoloader.in.php';
 
 // end models
 
-class Models extends \App\Market\Libraries\Functions
+class Models extends \App\APP_NAME\Libraries\Functions
 {
   public $imageLibrary;
   public $sqlError = '';
   public $sqlLimit = '';
   public $jsFunc;
-
+  public $errors = [];
   function __construct()
   {
     parent::__construct();
     // $this->imgageLibrary = new Gumlet\ImageResize();
+    // $this->getApiToken();
+    // $this->getLoggedUser();
+    // $this->initActiveWallet();
+    // if user is not logged in they should go home
+    if(empty($this->WALLET_UNIQ) && in_array($this->directory, $this->loginLinks)){
+      return $this->response['response'] = 'You have to be logged in to proceed.';
+      exit;
+    }
 
   }
 
 
-  public function createSlug(string $item, string $name, string $dir = '')
-  {
-    $name = strtolower($name);
-    $name = preg_replace('#[^a-zA-Z0-9 ]#i', '', $name);
-    $name = str_replace(' ', '-', $name);
-    $name = rtrim($name, '-');
-    $name = ltrim($name, '-');
-    $name = substr($name, 0, 150);
-
-    $dbSlug = new \App\Market\Tables\DbSlugs();
-    $dbSlug->rows->slug = $name;
-    $dbSlug->rows->item_id = $item;
-    $dbSlug->rows->directory = $dir ;
-    $id = $dbSlug->create();
-    if(!$id){
-      $dbSlug->rows->slug = $name .'-'.$item;
-      $id = $dbSlug->create();
-    }
-    return $id;
-
-  }
-
-  // param is assoc array [key => [vaue, operan]]
-  public function sqlExpress(array $param, string $attach = 'AND')
-  {
-    $express = '';
-    foreach ($param as $key => $value) {
-      $operan = $value[1];
-      $val = $value[0];
-      $express .= " $key $operan '$val' $attach";
-    }
-    if(strlen($express) > 0){
-      $express = chop($express, $attach);
+  function loadEngineErrors(string $object, string $method, string $lang = lang){
+    $errorFile = 'models/app.engine.models/app.engine.errors/'.strtolower($object).'_errors/error_{{lang}}.php';
+    $file =  str_replace('{{lang}}', $lang, $errorFile);
+    if(file_exists($file)){
+      $errorObject = require_once $file;
+      if(array_key_exists($method, $errorObject)){
+        $this->errors = $errorObject[$method];
+      } else {
+        $this->errors = [];
+      }
     } else {
-      $expres = 1;
+      $this->errors = [];
     }
-
-    return $express;
   }
-
-
 
   public function responseError($type = '')
   {
-    $this->reponse['response'] = 'Could not process your request.';
+    $this->response['response'] = 'Could not process your request.';
     return $this->response;
   }
 
 
-
-  public function getTableData(string $dbpage, $id){
-    if(is_array($id)){
-      $id = $this->sqlExpress($id);
-    } elseif(is_numeric($id)) {
-      $id = " id = '$id' ";
-    } elseif(!empty($id)) {
-      $id = str_ireplace(['drop', 'delete', 'insert', 'update'], '', $id);
-    } else {
-      return false;
-    }
-    if(strpos($dbpage, 'nj_') === FALSE && strpos($dbpage, $this->DATABASE_APPEND) === FALSE){
-      $dbpage = $this->DATABASE_APPEND . $dbpage;
-    }
-    // die($dbpage);
-
-    $query = $this->in_query("SELECT * FROM $dbpage WHERE $id LIMIT 1")or die($this->dbm->error . $dbpage.$id);
-    if($query->num_rows > 0) {
-      while($row = $query->fetch_assoc()){
-        return $row;
-      }
-    } else {
-      return false;
-    }
-
-  }
 
 
 
   // input struc for database
   public function structInsert(array $row) // return string
   {
-    try{
+    try {
       $newRow = [];
       foreach ($row as $key => $value) {
-        if($value == ''){continue;}
+        if ($value == '') {
+          continue;
+        }
         $newRow[$key] = $value;
       }
       $keys = array_keys($newRow);
@@ -116,16 +74,15 @@ class Models extends \App\Market\Libraries\Functions
       $keyList = join(', ', $keys);
       $valueList = "'" . join("', '", $values) . "'";
 
-      $sql = "INSERT INTO $this->table  ( $keyList )  VALUES ( " . $valueList. ") ";
-      $this->dbm->query($sql)or die($this->table.' || '. $valueList .' || '.$this->dbm->error);
-      if(!empty($this->dbm->error)) {
+      $sql = "INSERT INTO $this->table  ( $keyList )  VALUES ( " . $valueList . ") ";
+      $this->dbm->query($sql) or die($this->table . ' || ' . $valueList . ' || ' . $this->dbm->error);
+      if (!empty($this->dbm->error)) {
         $this->sqlError = $this->dbm->error;
         return false;
       } else {
         return $this->dbm->insert_id;
       }
-
-    } catch(Exception $e) {
+    } catch (\Exception $e) {
       var_dump($e->getMessage());
     }
   }
@@ -135,13 +92,15 @@ class Models extends \App\Market\Libraries\Functions
     $list = '';
     $row['updated_at'] = date('Y-m-d h:i:s');
     foreach ($row as $key => $value) {
-      if(strlen($value) < 1){ continue; }
+      if (strlen($value) < 1) {
+        continue;
+      }
       $list .= " $key = '$value', ";
     }
     $list = chop($list, ', ');
     $sql = " UPDATE $this->table SET $list, updated_at = now() WHERE id = '$id' LIMIT 1 ";
     $this->dbm->query($sql);
-    if($this->dbm->error) {
+    if ($this->dbm->error) {
       $this->sqlError = $this->dbm->error;
       return false;
     } else {
@@ -153,7 +112,7 @@ class Models extends \App\Market\Libraries\Functions
   {
     $sql = "DELETE FROM $this->table WHERE id = '$id' LIMIT $limit ";
     $this->dbm->query($sql);
-    if($this->dbm->error) {
+    if ($this->dbm->error) {
       $this->sqlError = $this->dbm->error;
       return false;
     } else {
@@ -167,12 +126,12 @@ class Models extends \App\Market\Libraries\Functions
     // return;
     // register activit
     $action = str_replace('|', '_', $action);
-    $adminActivity = new \App\Market\Tables\DbPageAdminActivities();
-    $adminActivity->rows->user = $this->user;
-    $adminActivity->rows->action = $action;
-    $adminActivity->rows->item_id = $id;
-    $adminActivity->rows->page = $this->PAGE_ID;
-    $adminActivity->create();
+    // $adminActivity = new \App\APP_NAME\Tables\DbPageAdminActivities();
+    // $adminActivity->rows->user = $this->user;
+    // $adminActivity->rows->action = $action;
+    // $adminActivity->rows->item_id = $id;
+    // $adminActivity->rows->page = $this->PAGE_ID;
+    // $adminActivity->create();
     // register activity
   }
 
@@ -181,13 +140,12 @@ class Models extends \App\Market\Libraries\Functions
     // return;
     $action = str_replace('|', '_', $action);
     // register activity
-    $productLog = new \App\Market\Tables\DbProductLogs();
-    $productLog->rows->user = $this->user;
-    $productLog->rows->action = $action;
-    $productLog->rows->page_id = $this->PAGE_ID;
-    $productLog->rows->item_id = $pid;
-    $productLog->create();
+    // $productLog = new \App\APP_NAME\Tables\DbProductLogs();
+    // $productLog->rows->user = $this->user;
+    // $productLog->rows->action = $action;
+    // $productLog->rows->page_id = $this->PAGE_ID;
+    // $productLog->rows->item_id = $pid;
+    // $productLog->create();
     // register activity
   }
-
 }

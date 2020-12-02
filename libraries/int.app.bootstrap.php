@@ -3,13 +3,13 @@
 /**
  *
  */
-class Bootstrap extends App\Market\Config\AppAuthenticate
+class Bootstrap extends App\APP_NAME\Config\AppAuthenticate
 {
 	public $url;
     public $dir;
     public $param;
     public $controller;
-    // public $system_urls = \App\MarketAppAuthenticate::system_urls;//['home', 'setup', 'filehandler', 'register', 'post', 'get', 'category', 'cart', 'checkout', 'shop', 'pg', 'product', 'profile', 'dash', 'pg', 'qr', 'about', 'help', 'faq', 'theme'];
+    // public $system_urls = \App\WalletAppAuthenticate::system_urls;//['home', 'setup', 'filehandler', 'register', 'post', 'get', 'category', 'cart', 'checkout', 'shop', 'pg', 'product', 'profile', 'dash', 'pg', 'qr', 'about', 'help', 'faq', 'theme'];
     public $response;
     public $homeControllerUrl = 'controllers/controller.index.php';
 
@@ -18,6 +18,7 @@ class Bootstrap extends App\Market\Config\AppAuthenticate
 		// start engine
 		parent::__construct();
 		$this->intV8Engine();
+		
 	}
 
 
@@ -74,8 +75,21 @@ class Bootstrap extends App\Market\Config\AppAuthenticate
 
 	            } else { // the method doesnt exist load home
 	            	include_once $this->homeControllerUrl;
-	            	$homeController = new Index();
-	            	$homeController->errorControllerMessage();
+					$homeController = new Index();
+					if(preg_match('#[^-_]#', $controllerName)){
+						$string = str_replace(['_', '-'], ' ', $controllerName);
+						$controllerName = ucwords($string);
+						$controllerName = lcfirst(str_replace(' ', '', $controllerName));
+					}
+					
+					if(method_exists($homeController, $controllerName)){
+						// $requestObject = array_splice($urlClean, 1);
+						array_shift($urlExp);
+						$homeController->$controllerName($urlExp);
+					} else {
+						$homeController->errorControllerMessage();
+					}
+
 
 	            }
 

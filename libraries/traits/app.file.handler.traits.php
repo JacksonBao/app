@@ -1,12 +1,12 @@
 <?php
-namespace App\Market\Traits;
+namespace App\APP_NAME\Traits;
 /*
 * To change this license header, choose License Headers in Project Properties.
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
 Use \Gumlet\ImageResize;
-Use \App\Market\Libraries\Functions;
+Use \App\APP_NAME\Libraries\Functions;
 
 Trait Uploader {
 
@@ -19,9 +19,15 @@ Trait Uploader {
   public $index;
 
   public $handleFiles = [];
-  public $fileHandleOption = ['sub_location' => '', 'user_type' => '', 'user' => 'temporal', 'filename_append' => '', 'sizes' => [
-    'original' => '1920x1200', 'medium' => '1024x768', 'small' => '512x512', 'tiny' => ''
-  ], 'allow_enlarge' => true];
+  public $fileHandleOption = [
+    'sub_location' => '', 'user_type' => '', 'user' => 'temporal', 'filename_append' => '', 'sizes' =>
+  [
+    'original' => ['size' => '1920x1550', 'allow_enlarge' => false, 'function' => 'resizeToBestFit', 'position' => ''],
+    'medium' =>  ['size' => '1024x768', 'allow_enlarge' => false, 'function' => 'resizeToBestFit', 'position' => ''] ,
+    'small' => ['size' => '512x512', 'allow_enlarge' => false, 'function' => 'crop', 'position' => ''],
+    'tiny' => ['size' => '', 'allow_enlarge' => false, 'function' => 'crop', 'position' => ''],
+  ]
+  ];
   public $fileHandleLocation = [];
   public $imageRootFolder = '';
   public $fileHandleDatabseResponse = [];
@@ -35,22 +41,29 @@ Trait Uploader {
   public function newFileHandler()
   {
     $this->handleFiles = [];
-    $this->fileHandleOption = ['sub_location' => '', 'user_type' => '', 'user' => '', 'filename_append' => '', 'sizes' => [
-      'original' => '1920x1200', 'medium' => '1024x768', 'small' => '512x512', 'tiny' => ''
-    ], 'allow_enlarge' => true];
+    $this->fileHandleOption = [
+      'sub_location' => '', 'user_type' => '', 'user' => 'temporal', 'filename_append' => '', 'sizes' =>
+    [
+      'original' => ['size' => '1920x1550', 'allow_enlarge' => false, 'function' => 'resizeToBestFit', 'position' => ''],
+      'medium' =>  ['size' => '1024x768', 'allow_enlarge' => false, 'function' => 'resizeToBestFit', 'position' => ''] ,
+      'small' => ['size' => '512x512', 'allow_enlarge' => false, 'function' => 'crop', 'position' => ''],
+      'tiny' => ['size' => '', 'allow_enlarge' => false, 'function' => 'crop', 'position' => ''],
+    ]
+    ];
     $this->fileHandleLocation = [];
     $this->imageRootFolder = '';
-    $this->fileHhandleDatabseResponse = [];
+    $this->fileHandleDatabseResponse = [];
   }
   public function intImageFolder()
   {
     $this->fileHandleLocation = [
-      'page' => str_replace(APP_FOLDER, 'image.app', APP_ROOT) . '/market.app/page/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
-      'user' => str_replace(APP_FOLDER, 'image.app', APP_ROOT) . '/market.app/user/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
-      'visitor' => str_replace(APP_FOLDER, 'image.app', APP_ROOT) . '/market.app/visitor/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
-      'temporal' => str_replace(APP_FOLDER, 'image.app', APP_ROOT) . '/market.app/temporal/' . date('Y') .'/' . date('m') . '/' . date('d') .'/'
+      'page' => WALLET_FILE_ROOT . '/wallet.app/page/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
+      'user' => WALLET_FILE_ROOT . '/wallet.app/user/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
+      'agent' => WALLET_FILE_ROOT . '/wallet.app/agent/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
+      'visitor' => WALLET_FILE_ROOT . '/wallet.app/visitor/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
+      'temporal' => WALLET_FILE_ROOT . '/wallet.app/temporal/' . date('Y') .'/' . date('m') . '/' . date('d') .'/'
     ];
-    $this->imageRootFolder = str_replace(APP_FOLDER, 'image.app', APP_ROOT);
+    $this->imageRootFolder = str_replace(WALLET_APP_FOLDER, 'image.app', WALLET_APP_ROOT);
 
   }
   function extReset($loc, $opt){
@@ -108,24 +121,14 @@ Trait Uploader {
 
     if(!array_key_exists($location, $this->fileHandleLocation)){ $location = 'temporal'; }
     // check if folder apc_exist
-    $folder = @$this->fileHandleLocation[$location];
-
-    if(!file_exists($folder)){
-      $folderX = rtrim(str_replace($this->imageRootFolder, '', $folder), '/');
-      $exp = explode('/', $folderX);
-      $lks = $this->imageRootFolder.'/';
-      foreach ($exp as $key => $value) {
-        if($value == ''){continue;}
-        $lks .= $value . '/';
-        if (!file_exists($lks)) {
-          mkdir($lks, 0755);
-        } else {
-          continue;
-        }
+      $folder = $this->fileHandleLocation[$location];
+      $folderX = rtrim($folder, '/');
+      $folderX .= '/';
+      if(!is_dir($folderX)){
+      mkdir($folderX, 0755, true);
       }
-    }
-    return $folder;
-  }
+  return $folderX;
+}
 
   function uploadFile() {
     $filesArray = [];
@@ -391,11 +394,12 @@ Trait Uploader {
     // check if file for various sizes and names
     if(in_array($extension, $this->imgArr)) {
       $fileSizes = '';$fileDimensions = '';
-      foreach ($settings['sizes'] as $key => $sizes) {
-        $sizes = str_replace(' ', '', $sizes);
+      foreach ($settings['sizes'] as $key => $sizesObj) {
+        $sizes = str_replace(' ', '', $sizesObj['size']);
+
         if(count(explode('x', strtolower($sizes))) !== 2 ){ continue;}
-        list($height, $width) = explode('x', strtolower($sizes));
-        $width = $width ?: $height;
+        list($width, $height) = explode('x', strtolower($sizes));
+        $height = $height ?: $width;
         $fileEnd = $filename . '_' . $sizes . '.' . $extension;
 
         $fileResponse[$key]['name'] = $fileEnd;
@@ -405,13 +409,25 @@ Trait Uploader {
         $fileEnd = $fileNewLink . $fileEnd;
         $fileResponse[$key]['url'] = str_replace($this->imageRootFolder, $this->imageRoot, $fileEnd);
 
-        $action = 'resizeToBestFit';
-        if(in_array($key, ['small', 'tiny'])){
-          $action = 'crop';
+        $action = $sizesObj['function'];
+        $allow_enlarge = $sizesObj['allow_enlarge'];
+        $extraOptions = '';
+        if(is_bool($allow_enlarge)){
+          $extraOptions = $allow_enlarge;
+        }
+
+        if(strpos('crop', $action) >= 0 && $sizesObj['position'] != ''){
+          $extraOptions .= ", " . $sizesObj['position'];
         }
 
         $rzObj = new ImageResize($fileLink);
-        $rzObj->$action($height, $width, $settings['allow_enlarge']);
+        if(!empty($extraOptions)){
+          $rzObj->$action($width, $height, $extraOptions);
+
+        } else {
+          $rzObj->$action($width, $height);
+
+        }
         $rzObj->save($fileEnd);
         $fileResponse[$key]['size'] = $this::getFileSize($fileEnd);
         $fileSizes .= $fileResponse[$key]['size'] .', ';
