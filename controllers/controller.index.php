@@ -18,6 +18,6 @@ class Index extends  \App\APP_NAME\Libraries\Controller
 
 	public function intHome()
 	{
-		$this->render('index', $this->user);
+		$this->render('index');
 	}
 }

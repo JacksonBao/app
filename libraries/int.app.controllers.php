@@ -4,7 +4,7 @@ namespace App\APP_NAME\Libraries;
 /**
  *
  */
-class Controller extends \App\APP_NAME\Config\AppAuthenticate
+class Controller extends \App\APP_NAME\Libraries\Functions
 {
  Use \App\APP_NAME\Traits\View, \App\APP_NAME\Traits\ErrorHandler;
 
