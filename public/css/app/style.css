@@ -1,4 +1,9 @@
 
+#app{
+    margin-top:  45px !important;
+    min-height: 80vh !important;
+}
+
   /*// snack bar*/
   #snackbar, .snackbar {
     visibility: hidden;
@@ -57,9 +62,7 @@ border: 0px !important;
     display:block;
 }
 
-    #app{
-        min-height: 250px;
-    }
+   
     ._text_12{
         font-size: 12px !important;
     }

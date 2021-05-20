@@ -1,10 +1,9 @@
 <?php
 
-
 /**
  * Index moel
  */
-class IndexModel extends \App\APP_NAME\Libraries\Models
+class IndexModel extends \Libraries\Models
 {
 
 	function __construct()

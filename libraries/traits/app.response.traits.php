@@ -1,5 +1,5 @@
 <?php
-namespace App\APP_NAME\Traits;
+namespace Traits;
 
 Trait RespondHandler{
 
@@ -19,7 +19,7 @@ Trait RespondHandler{
 	public function errorControllerMessage()
 	{
 		echo 'Controller error <br>';
-		var_dump($this->urlInView);
+		var_dump($this->URL_IN_VIEW);
 
 	}
 
@@ -27,6 +27,6 @@ Trait RespondHandler{
 	public function errorPage()
 	{
 		echo 'errorPage <br> ';
-		var_dump($this->urlInView);
+		var_dump($this->URL_IN_VIEW);
 	}
 }

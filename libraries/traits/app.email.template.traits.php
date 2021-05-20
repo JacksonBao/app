@@ -1,8 +1,8 @@
 <?php
 
-namespace App\APP_NAME\Traits;
+namespace Traits;
 
-use App\APP_NAME\Table\Classes\Users;
+use Table\Classes\Users;
 
 trait EmailTemplateTraits
 {
@@ -43,13 +43,8 @@ trait EmailTemplateTraits
   public function sendMail(string $subject, array $content, string $receiver = '', string $template = 'defaultEmail',  string $email = '', array $cc = [])
   {
     /// count note
-    if (strlen($receiver) > 0) {
-      $user = new Users();
-      $userData = $user->getUser($receiver);
-      $email = $email ?: $userData['details']['email'];
-    } else {
-      $content['notification'] = 0;
-    }
+    $email = $receiver;
+    
     // check template
     if (!method_exists($this, $template)) {
       $template = 'defaultEmail';
@@ -85,7 +80,7 @@ trait EmailTemplateTraits
         $headers .= 'cc: $cc_mail' . "\r\n";
       }
     }
-    if(ENV == 'PRODUCTION'){
+    if($_ENV['environment'] == 'production'){
       mail($email, $subject, $content['body'], $headers);
     }
 

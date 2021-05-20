@@ -1,12 +1,12 @@
 <?php
-namespace App\APP_NAME\Libraries;
+namespace Libraries;
 
 /**
  *
  */
-class Controller extends \App\APP_NAME\Libraries\Functions
+class Controller extends \Libraries\Functions
 {
- Use \App\APP_NAME\Traits\View, \App\APP_NAME\Traits\ErrorHandler;
+ Use \Traits\View, \Traits\ErrorHandler;
 
 	public $directory;
 	public $file;
@@ -14,19 +14,18 @@ class Controller extends \App\APP_NAME\Libraries\Functions
 	public $headerType = FALSE;
 	// method JS
 	public $meta,$view,$breadcrumbs,$runJsFunction,$pageTitle,$search,$active;
-	public $loadCss = [];
-	public $loadJs = [ 'root' => [], 'link' => [], 'main' => ['app.js']];
+	public $LOAD_CSS = [];
+	public $LOAD_JS = [ 'root' => [], 'link' => [], 'main' => ['app.js', 'app.classes.js', 'app.form.validate.js', 'app.api.js']];
 	public $metaTags = [];
 	public $alphaArray;
-	public $renderStatus = false;
-
 	// method JS
 
 
 	function __construct($directory, $file = 'index')
 	{
 		parent::__construct();
-		$this->directory = $directory;
+		$this->LOAD_DIR = $directory;
 		$this->file = $file;
+		
 	}
 }

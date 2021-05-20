@@ -4,7 +4,7 @@
  * WALLET HOME CONTROLLER
  */
 
-class Filehandler extends  \App\APP_NAME\Libraries\Controller
+class Filehandler extends  \Libraries\Controller
 {
 	use \App\APP_NAME\Traits\Uploader;
 	function __construct($loc = 'i', $opt = 'Default')

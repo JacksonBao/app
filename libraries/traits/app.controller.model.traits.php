@@ -1,5 +1,5 @@
 <?php
- namespace App\APP_NAME\Traits;
+ namespace Libraries\Traits;
 /**
  *
  */
@@ -12,21 +12,25 @@ Trait ControllerModel
   {
     // controller file
     $method = strtolower($method);
-    $controllerFile = 'models/app.engine.models/app.engine.errors/'.$method.'_errors/error_en.php';;
+    $controllerFile = 'models/errors/'.$method.'_errors/en.php';;
     // $method = ucwords($method);
 
     // create directory for $fileSizes
     $pageIndex = $controllerFile;
-      @mkdir('models/app.engine.models/app.engine.errors/'.$method.'_errors/');
+      @mkdir('models/errors/'.$method.'_errors/');
       $pageIndexOpen = fopen($pageIndex, "w") or die("Unable to open file!");
       $content = '
         <?php 
-            
+        
+        header("Content-Type: application/json");
         /**
          * '.strtoupper($method).' ERROR LIST
          */
 
-        return [];
+        $errors = [];
+
+        // return error
+        echo json_encode($errors);
         
       ';
       fwrite($pageIndexOpen, $content);
@@ -41,6 +45,7 @@ Trait ControllerModel
     $method = strtolower($method);
     $controllerFile = 'controllers/controller.'.$method.'.php';
     $methodFile = 'models/model.'.$method.'.php';
+    $methodJs = 'public/js/app/app.'.$method.'.js';
     $method = ucwords($method);
 
     // create directory for $fileSizes
@@ -51,6 +56,10 @@ Trait ControllerModel
       fwrite($pageIndexOpen, '<h1>'.$method.'</h1>');
       fclose($pageIndexOpen);
     // }
+// create js file
+      $pageIndexOpen = fopen($methodJs, "w") or die("Unable to open file!");
+      fwrite($pageIndexOpen, "// $method JS \n");
+      fclose($pageIndexOpen);
 
     // controller file
     $controllerTemplate = $this->controllerFileTemplate($method);
@@ -75,7 +84,7 @@ Trait ControllerModel
     /**
      * '.strtoupper($method).' CONTROLLER
      */
-    class '.$method.' extends \App\APP_NAME\Libraries\Controller
+    class '.$method.' extends \Libraries\Controller
     {
 
     	function __construct()
@@ -85,6 +94,8 @@ Trait ControllerModel
     		// load parent model
     		include_once \'models/model.'.strtolower($method).'.php\';
     		$this->model = new '.$method.'Model();
+        // Load defaul js
+        $this->LOAD_JS[\'main\'][] = "app.'.strtolower($method).'.js";
     	}
 
     	public function intHome()
@@ -104,7 +115,7 @@ Trait ControllerModel
       /**
        * Index model
        */
-      class '.$method.'Model extends \App\APP_NAME\Libraries\Models
+      class '.$method.'Model extends \Libraries\Models
       {
 
       	function __construct()

@@ -8,7 +8,7 @@ class Cookie {
       d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
       var expires = "expires=" + d.toUTCString();
       // document.cookie = cname + "=" + cvalue + ";domain=.njofa.com;" + expires + ";path=/";
-      document.cookie = cname + "=" + cvalue + ";domain=.njofa.dv;" + expires + ";path=/";
+      document.cookie = cname + "=" + cvalue + ";domain=.thanosapi.dv;" + expires + ";path=/";
   }
 
   static getCookie(cname) {
@@ -88,25 +88,27 @@ class Storage {
 class UserLocation {
 
   constructor() {
-          if(Cookie.checkCookie('usr_location') == false){
+          if(Cookie.checkCookie('user_location') == false){
              $.ajax({
                 url: "https://geolocation-db.com/jsonp",
                 jsonpCallback: "callback",
                 dataType: "jsonp",
                 success: function(location) {
                   var locationString = JSON.stringify(location);
-                  Cookie.setCookie('usr_location', locationString, 2);
-                  this.setLocation();
+                  Cookie.setCookie('user_location', locationString, 2);
                 }
               });
+              this.setLocation();
             }else {
               this.setLocation();
             }
   }
 
   setLocation(){
-      var location = JSON.parse(Cookie.getCookie('usr_location'));
-      this.location = location;
+      if(Cookie.checkCookie('user_location') == true) {
+        var location = JSON.parse(Cookie.getCookie('user_location'));
+        this.location = location; 
+      }
   }
 
   getCountrCode(){

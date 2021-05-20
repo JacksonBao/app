@@ -1,5 +1,5 @@
 <?php
-namespace App\APP_NAME\Traits;
+namespace Traits;
 
 Trait NotificationTemplateTraits{
 

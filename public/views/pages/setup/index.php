@@ -19,6 +19,7 @@
           <li class="list-group-item"><a href="/setup/conmodel">Controller & Models</a></li>
           <li class="list-group-item"><a href="/setup/tables">Database files</a></li>
           <li class="list-group-item"><a href="/setup/engineErrors">Error files</a></li>
+          <li class="list-group-item"><a href="/setup/start-app">Setup App</a></li>
         </ul>
       </div>
       </div>

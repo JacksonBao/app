@@ -3,7 +3,7 @@
 /**
  * WALLET HOME CONTROLLER
  */
-class Setup extends  \App\APP_NAME\Libraries\Controller
+class Setup extends  \Libraries\Controller
 {
 
 
@@ -30,6 +30,13 @@ class Setup extends  \App\APP_NAME\Libraries\Controller
 				$this->body = $this->model->getControllerModels($param);
 			}
 			$this->render('index');
+	}
+
+	public function startApp(array $param = [])
+	{
+		$this->body = $this->model->generateDefaultDbTables();
+		var_dump($this->body);
+
 	}
 
 	public function tables(array $param = [])

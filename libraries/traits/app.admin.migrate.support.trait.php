@@ -1,8 +1,8 @@
 <?php
 
-namespace App\APP_NAME\Traits;
+namespace Traits;
 
-use App\APP_NAME\Table\Classes\Users;
+use Table\Classes\Users;
 
 trait AdminSupport
 {

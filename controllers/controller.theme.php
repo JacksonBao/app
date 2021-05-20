@@ -3,7 +3,7 @@
 /**
  * WALLET HOME CONTROLLER
  */
-class Theme extends  \App\APP_NAME\Libraries\Controller
+class Theme extends  \Libraries\Controller
 {
 
 

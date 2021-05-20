@@ -1,126 +1,111 @@
-
 </div>
 
 <!-- modal -->
 
+<!-- snack bar -->
+<div class="snackbar" id="snackbar"></div>
+<!-- snack bar -->
 
 
-<!-- Modal -->
-<div class="w3-modal" id="_cwMModal" style="z-index:500000;"> <div class="w3-modal-content" id="_cwMMContent"></div></div>
-<!-- Modal -->
 
+<!-- foorwe -->
+<!-- Footer -->
+<footer class="page-footer font-small bg-main text-light ">
 
-<!-- Modal -->
-<div class="modal fade" id="_bModal" tabindex="-1" role="dialog" aria-labelledby="_bModalLabel" aria-hidden="true" style="z-index: 5000000">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="_bModalLabel">Njofa Response</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body" id="_bmBody">
-          
-          
-      </div>
-      <div class="modal-footer w3-hide">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-    
+  
+  <!-- Copyright Powered by njofa engine -->
+  <div class="footer-copyright text-center opacity-8 py-3 bg-dark" style="font-weight: 600px;font-size: 12px;">
+
+    <div class="row py-2 w3-center">
+
+      <div class="col-12">
+        <div class="d-flex justify-content-center w3-small">
+          <div class="pr-3 py-3"> <a class="text-white" href="/privacy/terms">Terms of Use</a></div>
+          <div class="p-3"> <a class="text-white" href="/privacy/privacy-policies">Privacy Policies</a></div>
+          <div class="p-3 pr-3"> <a class="text-white" href="/#about">About</a></div>
+          <div class="p-3"> <a class="text-white" href="/#contact-us">Contact Us</a></div>
+          <div class="p-3 pr-3"> <a class="text-white" href="/#stones">Api Stones</a></div>
+
+        </div>
       </div>
     </div>
+    © <?php echo date('Y') ?> Copyright 
+    <a href="https://njofa.com/" target="_blank" class="text-light"> Njofa Group Inc</a>
   </div>
-</div>
-<!-- modal -->
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+
+<!-- footer -->
 
 
 
-<!--include javascripts-->
+
 
 
 <div class="snackbar" id="snackbar"></div>
 
-<?php echo $this->func->rightButtons(); ?>
+<?php
+// echo $this->func->rightButtons();
+?>
+
+<!--include javascripts-->
 
 
 
 
 
 
-  <!-- JS PLUGIN -->
-  <!-- <script type="text/javascript" src="/ck_js_plugin/jquery.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/ck_js_plugin/bootstrap.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/ck_js_plugin/carousel.js"></script> -->
-  <!-- <script type="text/javascript" src="/ck_js_plugin/w3Data.js"></script> -->
-  <!-- <script type="text/javascript" src="/ck_js_plugin/lightbox.min.js"></script> -->
-  <!-- <script type="text/javascript" src="/ck_js_plugin/scrolltofixed-min.js"></script> -->
-  <script type="text/javascript" src="/v5/public/js/ck_mainJs.js"></script>
-
-  <!-- <script type="text/javascript" src="/v5/public/js/ck_mainJs.js"></script> -->
-
-
-<!-- <script type="text/javascript" src="/v5/public/js/ck_chat_file_process.js"></script> -->
-<script type="text/javascript" src="/v5/config/js/lightbox.min.js"></script>
-<script type="text/javascript" src="/v5/public/js/ck_user_pattern.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.4/plyr.min.js"></script>
-<!-- <script src="https://cdn.plyr.io/3.5.3/plyr.js"></script> -->
-
-<!-- cart sys -->
-<!-- <script type="text/javascript" src="/v5/public/js/ck_userCart_sys.js"></script> -->
 
 
 
+<!-- JS PLUGIN -->
+<script type="text/javascript" src="/public/js/libraries/lightbox.min.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.5.4/plyr.min.js"></script> -->
 
-    <?php 
-if(is_array($this->js)){
-    $array = $this->js;
-    foreach ($array as $key => $value){
-        if($key == 'Main'){
-            foreach($value as $ky => $file){
-                $file = '/v5/public/js/' . $file;
-                   
-                    echo '<script src="'.$file.'"> </script>';
-              
-            }
-        } else {
-       
-               // note for other source make sure to include the full path
-             if($key == 'Link'){
-                 $link = $array['Link'];
-//                 echo $link;''
-                if(array_key_exists('Files', $array)){
-                 foreach ($array['Files'] as $k => $fileArr){
-                   $files = $link.$fileArr;
-                }
-                  
-                if(!empty($files)){
-                     echo '<script src="'.$files.'"> </script>';
-                    } 
-                 
-               }
-                 
+<!--include javascripts-->
 
+<?php
 
-
-             } elseif($key == 'root') {
-                   foreach($value as $ky => $file){
-//                    if(file_exists($file)){
-                       
-                    echo '<script src="'.$file.'"> </script>';
-//                }
-             }
-            }
-        }
+foreach ($this->LOAD_JS as $key => $value) {
+  if ($key == 'main') {
+    foreach ($value as $ky => $file) {
+      $file = '/public/js/app/' . $file;
+      echo '<script src="' . $file . '"> </script>';
     }
+  } else {
+
+    // note for other source make sure to include the full path
+    if ($key == 'link') {
+      $link = $this->LOAD_JS['link'];
+      //                 echo $link;
+      if (array_key_exists('Files', $this->LOAD_JS)) {
+        foreach ($this->LOAD_JS['Files'] as $k => $fileArr) {
+          $files = $link . $fileArr;
+
+          if (file_exists($files)) {
+            echo '<script src="' . $files . '"> </script>';
+          }
+        }
+      }
+    } elseif ($key == 'root') {
+      foreach ($value as $ky => $file) {
+        if (file_exists($file) || str_replace('http', '', $file)) {
+          echo '<script src="' . $file . '"> </script>';
+        }
+      }
+    }
+  }
+}
+
+if (!empty($this->runJsFunction)) {
+  echo '<script>' . $this->runJsFunction . "</script>";
 }
 ?>
 
-
-<script type="text/javascript">
-  <?php echo  $this->runJsFunc; ?>
-</script>
-     
 <!--include javascripts-->
 
 </body>
+
 </html>

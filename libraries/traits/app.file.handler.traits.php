@@ -1,12 +1,12 @@
 <?php
-namespace App\APP_NAME\Traits;
+namespace Traits;
 /*
 * To change this license header, choose License Headers in Project Properties.
 * To change this template file, choose Tools | Templates
 * and open the template in the editor.
 */
 Use \Gumlet\ImageResize;
-Use \App\APP_NAME\Libraries\Functions;
+Use \Libraries\Functions;
 
 Trait Uploader {
 
@@ -57,13 +57,10 @@ Trait Uploader {
   public function intImageFolder()
   {
     $this->fileHandleLocation = [
-      'page' => WALLET_FILE_ROOT . '/wallet.app/page/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
-      'user' => WALLET_FILE_ROOT . '/wallet.app/user/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
-      'agent' => WALLET_FILE_ROOT . '/wallet.app/agent/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
-      'visitor' => WALLET_FILE_ROOT . '/wallet.app/visitor/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
-      'temporal' => WALLET_FILE_ROOT . '/wallet.app/temporal/' . date('Y') .'/' . date('m') . '/' . date('d') .'/'
+      'user' => FILE_ROOT . '/amazon/public/img/users/' .$this->fileHandleOption['user']. '/' . date('Y') .'/' . date('m') . '/' . date('d') .'/',
+      'temporal' => FILE_ROOT . '/amazon/public/img/temporal/' . date('Y') .'/' . date('m') . '/' . date('d') .'/'
     ];
-    $this->imageRootFolder = str_replace(WALLET_APP_FOLDER, 'image.app', WALLET_APP_ROOT);
+    $this->imageRootFolder = str_replace(APP_FOLDER, 'image.app', APP_ROOT);
 
   }
   function extReset($loc, $opt){

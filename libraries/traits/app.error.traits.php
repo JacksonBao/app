@@ -1,5 +1,5 @@
 <?php
-namespace App\APP_NAME\Traits;
+namespace Traits;
 
 Trait ErrorHandler{
 
@@ -16,7 +16,8 @@ Trait ErrorHandler{
 
 	public function errorControllerMessage()
 	{
-		$this->directory = 'error';
+		$this->LOAD_DIR = 'error';
+		die('Controller Error');
 		$this->render('controller', 0);
 
 	}

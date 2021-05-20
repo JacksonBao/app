@@ -1,6 +1,6 @@
 <?php
 
-namespace App\APP_NAME\Traits;
+namespace Traits;
 
 /**
  * SANITIZE forms
@@ -9,11 +9,8 @@ namespace App\APP_NAME\Traits;
 trait ValidateForm
 {
   public $validateObject = [];
-  public $validateErrors = [];
-
-  public $validateFormError = false;
-  public $validateFormErrorResponse = ['id' => '', 'message' => ''];
-  public $validateFormCheckTypes = ['string' => 'strlen', 'email' => '', 'int' => '', 'array' => 'count', 'float' => ''];
+  public $validateError = [];
+  public $validateStatus = false;
 
 
 
@@ -23,7 +20,7 @@ trait ValidateForm
   }
   public function cleanInt($int)
   {
-    return (float) preg_replace('#[^0-9\.]#', '', $int);
+    return (float) preg_replace('#[^0-9e\.]#', '', $int);
   }
 
   public function cleanEmail(string $email)
@@ -36,84 +33,105 @@ trait ValidateForm
     return filter_var($url, FILTER_VALIDATE_URL);
   }
 
-
-  public function sanitizeReset()
+  public function resetSanitize()
   {
-    $this->validateFormError = false;
-    $this->validateFormErrorResponse = ['id' => '', 'message' => ''];
+    $this->validateObject = [];
+    $this->validateError = [];
+    $this->validateStatus = false;
   }
 
-  public function initErrorLang($method = 'main', $lang = lang)
+  function sanitizeRequest(array $post)
   {
-    $errorFile = 'models/app.engine.models/app.engine.errors/validate_errors/error_{{lang}}.php';
-    $file =  str_replace('{{lang}}', $lang, $errorFile);
-
-    if (file_exists($file)) {
-      $errorObject = require_once $file;
-      if (array_key_exists($method, $errorObject)) {
-        $this->validateErrors = $errorObject[$method];
-      }
-    }
-
-    if (count($this->validateErrors) == 0) {
-      $file =  str_replace('{{lang}}', 'en', $errorFile);
-      $errorObject = require_once $file;
-      $this->validateErrors = $errorObject['main'];
-    }
-
-    return $this->validateErrors;
-  }
-
-  function sanitizePost(array $post = [])
-  {
-    $this->sanitizeReset();
-    $this->initErrorLang();
     $post = count($post) > 0 ? $post : $_POST;
+    $function = strtolower(debug_backtrace()[1]['function']);
+    if(array_key_exists($function, $this->ERROR_LIST)){
+      $this->errors = $this->ERROR_LIST[$function];
+    }
+
 
     // run check on all items listed
-    if (count($this->sanitize_obj) > 0) {
-      foreach ($this->sanitize_obj as $key => $checker) {
+    if (count($this->validateObject) > 0 && count($post) > 0 ) {
 
-        if (array_key_exists('method', $checker)) {
-          $method = 'clean' . ucwords($checker['method']);
-          if (method_exists($this, $method)) {
-            $checker['value'] = $this->$method($checker['value']);
-            if ($this->checkCondition($checker) == true) {
-              $post[$checker['name']] = $checker['value'];
-            } else {
-              $this->validateFormError = true;
-              $this->validateFormErrorResponse['id'] = $checker['id'];
-              $this->validateFormErrorResponse['message'] = $checker['message']. ' '. $this->errorMessage;
-              return $this->validateFormErrorResponse;
-            }
+      $validated = [];
+      foreach ($post as $key => $value) {
+        if (array_key_exists($key, $this->validateObject)) {
+          $validate = $this->validateObject[$key];
+          if(!isset($validate['replace'])){
+            $validate['replace'] = [];
           }
+          switch ($validate['type']) {
+            case 'str':
+              $value = is_string($value) ?  $this->cleanString($value) : '';
+              break;
+            case 'int':
+              $value = is_numeric($value) ?  $this->cleanInt($value) : '';
+              break;
+            case 'mail':
+              $value = is_string($value) ?  $this->cleanEmail($value) : '';
+              break;
+            case 'url':
+              $value = is_string($value) ?  $this->cleanUrl($value) : '';
+              break;
+            case 'html':
+              $value = is_string($value) ?  $this->cleanHtml($value) : '';
+              break;
+          }
+      
+            $errorAppend = '';
+          if (isset($validate['min']) && $validate['min'] > 0 && (($validate['type'] == 'int' && $value < $validate['min']) || ($validate['type'] == 'array' && count($value) < $validate['min']) || strlen($value) < $validate['min'])) {
+            $value = '';
+            $errorAppend = ucwords($key) . ' must be at least '.$validate['min']. ($validate['type'] != 'int' ? ' character(s). ' : '.');;
+          }
+          if (!empty($value) && isset($validate['max']) && $validate['max'] > 0 && (($validate['type'] == 'int' && $value > $validate['max']) || ($validate['type'] == 'array' && count($value) > $validate['max']) || strlen($value) > $validate['max'])) {
+            $value = '';
+            $errorAppend = ucwords($key) . ' must be at most '.$validate['max']. ($validate['type'] != 'int' ? ' character(s). ' : '.');
+          }
+
+        if (empty($value)) {
+          $error = @$this->errors['invalid_' . strtolower($key)];
+          if(isset($validate['replace']) && count($validate['replace']) > 0){
+            $titles = array_keys($validate['replace']);
+            $title = "{".implode("}, {", $titles) . "}";
+            $titles = explode(', ', $title);
+            $repVals = array_values($validate['replace']);
+            $error = str_replace($titles, $repVals, $error);
+          }
+          $this->validateError = $this->validateObject[$key];
+          $this->validateError['key'] =  $key;
+          $this->validateError['message'] =  $error . ' ' . $errorAppend;
+          break;
+        } else {
+          $validated[$key] = $value;
         }
+
       }
+
+      }
+
+      if (count($this->validateError) == 0) {
+        $this->validateStatus = true;
+        return $validated;
+      }
+    } else {
+      
+      $key = array_keys($this->validateObject)[0];
+      $error = @$this->errors['invalid_' . strtolower($key)];
+          if(isset($validate['replace']) && count($validate['replace']) > 0){
+            $titles = array_keys($validate['replace']);
+            $title = "{".implode("}, {", $titles) . "}";
+            $titles = explode(', ', $title);
+            $repVals = array_values($validate['replace']);
+            $error = str_replace($titles, $repVals, $error);
+          }
+
+          $this->validateError = $this->validateObject[$key];
+          $this->validateError['key'] =  $key;
+          $this->validateError['message'] =  $error;
     }
 
-
-    return $post;
   }
 
 
-  public function checkCondition(array $object)
-  {
-    if (array_key_exists('null', $object) && $object['null'] == false && empty($object['value'])) {
-      $this->errorMessage = str_replace('{{field}}', $object['name'], $this->validateErrors['null']);
-      return false;
-    }
-
-    if (array_key_exists('min', $object) && $object['min'] > 0 && strlen($object['value']) >= $object['min']) {
-      $this->errorMessage = str_replace(['{{field}}', '{{min}}'], [$object['name'], $object['min']], $this->validateErrors['min']);
-      return false;
-    }
-
-    if (array_key_exists('max', $object) && $object['max'] > 0 && strlen($object['value']) >= $object['min']) {
-      $this->errorMessage = str_replace(['{{field}}', '{{max}}'], [$object['name'], $object['max']], $this->validateErrors['max']);
-      return false;
-    }
-    return true;
-  }
 
   public function cleanHtml(string $string)
   {

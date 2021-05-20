@@ -1,18 +1,19 @@
 <?php
 
+use Controllers\Api;
+
 /**
  *
  */
-class Bootstrap extends App\APP_NAME\Config\AppAuthenticate
+class Bootstrap extends Config\Routes
 {
 	public $url;
     public $dir;
     public $param;
     public $controller;
-    // public $system_urls = \App\WalletAppAuthenticate::system_urls;//['home', 'setup', 'filehandler', 'register', 'post', 'get', 'category', 'cart', 'checkout', 'shop', 'pg', 'product', 'profile', 'dash', 'pg', 'qr', 'about', 'help', 'faq', 'theme'];
     public $response;
-    public $homeControllerUrl = 'controllers/controller.index.php';
-
+    public $homeControllerUrl = __DIR__ . '/../controllers/controller.index.php';
+	
 	function __construct()
 	{
 		// start engine
@@ -24,7 +25,46 @@ class Bootstrap extends App\APP_NAME\Config\AppAuthenticate
 
 	public function intV8Engine()
 	{
-		if(isset($_GET['url'])){
+		$route = getcwd();
+		$routeSplit = explode('\\', $route);
+		$folder = $routeSplit[count($routeSplit) - 2];
+		if($folder == 'versions') {
+			if(isset($_GET['url'])){
+			$route = getcwd();
+			$routeSplit = explode('\\', $route);
+			$version = end($routeSplit);
+			
+
+	        $url = preg_replace('#[^a-zA-Z0-9 /_-]#i', '', $_GET['url']);
+	        $url2 = preg_replace('#[^a-zA-Z0-9/_-]#i', '', $_GET['url']);
+
+	        if(!empty($url)){
+				$url = rtrim($url, '/');
+	            $urlExp = explode('/', $url);
+
+	            $urlLower = strtolower($url);
+	            $urlLowerExp = explode('/', $urlLower);
+
+	            $controllerName = $urlLowerExp[0];
+				$api = new Api( $version );
+				// check method
+				if(method_exists($api, $controllerName)){
+					array_shift($urlLowerExp);
+					$response = $api->$controllerName($urlLowerExp);
+				} else {
+					$response['status'] = false;
+					$response['message'] = 'Invalid end point.';
+				}
+			}
+		} else {
+			$response['status'] = false;
+			$response['message'] = 'Invalid request.';
+		}
+			header('Content-Type: application/json');
+			echo json_encode($response);
+			exit;
+
+		} elseif(isset($_GET['url'])){
 	        $url = preg_replace('#[^a-zA-Z0-9 /_-]#i', '', $_GET['url']);
 	        $url2 = preg_replace('#[^a-zA-Z0-9/_-]#i', '', $_GET['url']);
 
@@ -38,15 +78,14 @@ class Bootstrap extends App\APP_NAME\Config\AppAuthenticate
 
 	            $controllerName = $urlLowerExp[0];
 
-	            if(in_array($controllerName, $this->system_urls)){
+	            if(in_array($controllerName, $this->ROUTES)){
 
 	            	$controllerFileName = 'controller.'.$controllerName.'.php';
 	            	// include controller
-	            	include_once 'controllers/' . $controllerFileName;
+	            	include_once __DIR__ .'/../controllers/' . $controllerFileName;
 
 	            	// initaite crawler
 	            	$controllerClass = ucfirst($controllerName);
-
 	            	$controller = new $controllerClass();
 	            	// check if we have pointing method
 
@@ -87,14 +126,10 @@ class Bootstrap extends App\APP_NAME\Config\AppAuthenticate
 						array_shift($urlExp);
 						$homeController->$controllerName($urlExp);
 					} else {
+						// ver sion control for api
 						$homeController->errorControllerMessage();
 					}
-
-
 	            }
-
-
-
 
 	        } else { // load home page
 	        	include_once $this->homeControllerUrl;

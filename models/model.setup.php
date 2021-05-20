@@ -11,10 +11,10 @@ include_once 'libraries/traits/app.controller.model.traits.php';
 
 
 
-class SetupModel extends \App\APP_NAME\Libraries\Models
+class SetupModel extends \Libraries\Models
 {
-	use \App\APP_NAME\Traits\ControllerModel;
-	use \App\APP_NAME\Traits\ModelTables;
+	use \Libraries\Traits\ControllerModel;
+	use \Libraries\Traits\ModelTables;
 	function __construct()
 	{
 		parent::__construct();
@@ -23,7 +23,7 @@ class SetupModel extends \App\APP_NAME\Libraries\Models
 	public function getControllerModels()
 	{
 		$exist = ''; $notAvailable = '';
-		$urlList = $this->system_urls;
+		$urlList = $this->ROUTES;
 		foreach ($urlList as $key => $meth) {
 			$file = 'controllers/controller.'.$meth.'.php';
 			if(file_exists($file)){
@@ -50,14 +50,19 @@ class SetupModel extends \App\APP_NAME\Libraries\Models
 	}
 	public function getModelTables()
 	{
+		
 		$exist = ''; $notAvailable = '';
 
-		$sql = "SHOW TABLES FROM $this->database";
-		$result = $this->in_query($sql);
+		$sql = "SHOW TABLES FROM " . $_ENV[$_ENV['environment'] .'_database'];
+		$result = $this->query($sql);
 		while ($row = mysqli_fetch_row($result)) {
+			// $this->query("ALTER TABLE ".$row[0]." CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT");
 		  $table = str_replace(['nj_wl_', '_'], ['', '.'], $row[0]);
+		  $table = str_replace(' ', '', ucwords(str_replace('.', ' ', $table)));
+		  $classnameSplit = preg_split('/(?=[A-Z])/', trim($table));
+    	  array_shift($classnameSplit);
 			// check if file apc_exists
-			$file = 'models/db.tables/db.' . $table . '.php';
+			$file = 'models/classes/' . strtolower(join('.', $classnameSplit)) . '.php';
 			if(file_exists($file)){
 				$exist .= '<li class="list-group-item bg-light">'.ucwords($table).'</li>';
 			} else {// files does not exist
@@ -86,7 +91,7 @@ class SetupModel extends \App\APP_NAME\Libraries\Models
 public function generateControllerModel()
 {
 	$list = '';
-	$urlList = $this->system_urls;
+	$urlList = $this->ROUTES;
 	foreach ($urlList as $key => $meth) {
 		$file = 'controllers/controller.'.$meth.'.php';
 		if(!file_exists($file)){
@@ -121,14 +126,22 @@ public function generateControllerModel()
 
 public function generateTableModels()
 {
+	
 			$list = '';
-			$sql = "SHOW TABLES FROM $this->database";
-			$result = $this->in_query($sql);
+			$sql = "SHOW TABLES FROM " .  $_ENV[$_ENV['environment'] .'_database'];
+			$result = $this->query($sql);
 			if(mysqli_num_rows($result) > 0) {
 			while ($row = mysqli_fetch_row($result)) {
+			
+				// $this->query("ALTER TABLE ".$row[0]." CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT");
 				$table = str_replace(['nj_wl_', '_'], ['', '.'], $row[0]);
+				$table = str_replace(' ', '', ucwords(str_replace('.', ' ', $table)));
+				$classnameSplit = preg_split('/(?=[A-Z])/', trim($table));
+				array_shift($classnameSplit);
 				// check if file apc_exists
-				$file = 'models/db.tables/db.' . $table . '.php';
+				$file = 'models/classes/' . strtolower(join('.', $classnameSplit)) . '.php';
+
+				// check if file apc_exists
 				if(!file_exists($file)){
 					$this->generateModelTableTemplate($row[0]);
 					$list .= '<li class="list-group-item bg-light">'.ucwords($table).': '.$file.'</li>';
@@ -162,10 +175,11 @@ public function generateTableModels()
 public function generateEngineErrorFiles()
 {
 	$list = '';
-	$urlList = $this->system_urls;
+	$urlList = $this->ROUTES;
+	
 	foreach ($urlList as $key => $meth) {
 		// $file = 'controllers/controller.'.$meth.'.php';
-		$file = 'models/app.engine.models/app.engine.errors/'.$meth.'_errors/error_en.php';// controller.'.$meth.'.php';
+		$file = 'models/errors/'.$meth.'_errors/en.php';// controller.'.$meth.'.php';
 		if(!file_exists($file)){
 			$this->generateErrorFiles($meth);
 			$list .= '<li class="list-group-item bg-light">'.ucwords($meth).': '.$file.'</li>';
@@ -199,7 +213,7 @@ public function getEngineErrorFiles()
 {
 	
 	$exist = ''; $notAvailable = '';
-	$urlList = $this->system_urls;
+	$urlList = $this->ROUTES;
 	foreach ($urlList as $key => $meth) {
 		$file = 'models/app.engine.models/app.engine.errors/'.$meth.'_errors/error_file_en.php';// controller.'.$meth.'.php';
 		if(file_exists($file)){

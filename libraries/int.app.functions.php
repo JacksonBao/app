@@ -1,21 +1,23 @@
 <?php
 
-namespace App\APP_NAME\Libraries;
+namespace Libraries;
+
+use Models\Classes\ApiUserKeys;
 
 /**
  *
  */
 
-class Functions extends \App\APP_NAME\Config\AppAuthenticate
+class Functions extends \Config\Connect
 {
-	use \App\APP_NAME\Traits\EmailTemplateTraits;
-	use \App\APP_NAME\Traits\ComponentsTraits;
-	use \App\APP_NAME\Traits\CookiesSessionsTraits;
-	use \App\APP_NAME\Config\StringEncrypt,  \App\APP_NAME\Traits\Uploader, \App\APP_NAME\Traits\ValidateForm;
-	use \App\APP_NAME\Traits\NotificationTemplateTraits;
-	use \App\APP_NAME\Traits\AdminSupport;
-	// use App\APP_NAME\Traits\;
-	// use App\APP_NAME\Traits\;
+	use \Traits\EmailTemplateTraits;
+	use \Traits\ComponentsTraits;
+	use \Traits\CookiesSessionsTraits;
+	use \Traits\Uploader, \Traits\ValidateForm;
+	use \Traits\NotificationTemplateTraits;
+	use \Traits\AdminSupport;
+	// use Traits\;
+	// use Traits\;
 
 	public $snoopiUrl;
 	public $meta = [];
@@ -27,13 +29,15 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		$this->snoopiUrl = 'https://api.snoopi.io/' . $ip . '?apikey=7d548e49e9d110016dae82dc395a6d30';
 		// register secure cookies
 		if(isset($_COOKIE)){
-			foreach ($this->registeredCookies as $key => $cookie) {
+			foreach ($this->REGISTERED_COOKIES as $key => $cookie) {
 				if(array_key_exists($cookie, $_COOKIE)){
 					$content = $_COOKIE[$cookie];
 					$this->addCookie($cookie, $content, '1 days');
 				}
 			}
 		}
+
+		$this->getApiToken();
 	}
 
 
@@ -47,8 +51,8 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 	{
   
 	  $meta = $this->meta;
-	  $meta['name'] = (isset($meta['name']) ? $meta['name'] . ' | '. WALLET_APP_NAME : $this->pageTitle);
-	  $meta['url'] = @$meta['url'] ?: $this->urlInView;
+	  $meta['name'] = (isset($meta['name']) ? $meta['name'] . ' | '. APP_NAME : $this->pageTitle);
+	  $meta['url'] = @$meta['url'] ?: $this->URL_IN_VIEW;
 
 	  if (is_array($meta)) {
 		$ogTags  = $twitter = '';
@@ -201,22 +205,6 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 	}
 	// parse css to php array from link
 
-	public function auth()
-	{
-		$status = false;
-		if (!isset($_SESSION['WALLET_ADMIN_STATUS'])) {
-			$response = $this->apiCalls('social/isStaff', ['user_uniq' => $this->USER_UNIQ]);
-			if (array_key_exists('status', $response) && $response['status'] == 200) {
-				$status = true;
-			} else {
-				$status = false;
-			}
-			$_SESSION['WALLET_ADMIN_STATUS'] = $status;
-		} else {
-			$status = $_SESSION['WALLET_ADMIN_STATUS'];
-		}
-		return $status;
-	}
 
 
 
@@ -338,175 +326,106 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		return $str;
 	}
 
-
-
-	public function walletKey(string $user = '')
-	{
-		$user = $user ?: $this->WALLET_UNIQ;
-		if ($this->WALLET_TYPE != 'agents') {
-			$userData = $this->getTableData("user_settings", " user_id = '$user' AND setting = 'key' ");
-			$userKey = @$this->decryptString($userData['setting_value'], WALLET_GLOBAL_KEY);
-		} else {
-			// die($user);
-			$user = $this->getTableData('agents', " uniq = '$user'")['id'];
-			$userData = $this->getTableData("agent_settings", " agent_id = '$user' AND options = 'key' ");
-			$userKey = @$this->decryptString($userData['option_values'], WALLET_GLOBAL_KEY);
-		}
-		return $userKey;
-	}
-
-
-	public function apiCalls(string $method, array $object = [])
+	
+	public function njofaApiCalls(string $method, array $object = [])
 	{
 		$object = array_merge([
-			'api_token' => $this->apiToken,
+			'api_token' => $this->API_TOKEN,
 		], $object);
-		$responses = $this->phpPost($object, $this->apiUrl . $method);
+		$responses = $this->phpPost($object, $_ENV['NJOFA_API_ENDPOINT'] . $method);
 		$response = (array) json_decode($responses) ?: ['status' => 0, 'lover' => $responses];
+		if($response['status'] == 200){ $response['status'] == true; } else { $response['status'] == false;}
 		return $response;
 	}
 
-	public function walletUser(string $user, string $request = '')
+	
+
+    public function apiLog($title,  ?string $error)
+    {
+        $dir = __DIR__ . '/../public/api/logs/' . date('Y') . '/' . date('m') . '/' . date('d') . '/';
+        if(!file_exists($dir)){
+            $this->createDir($dir);
+        }
+  
+      if (strlen($error) > 0) {
+        $errorFile = fopen($dir . strtolower($title) . "_logs.txt", "a+") or die("Unable to open file!");
+        $txt = date('Y-m-d h:i:s') . ": $error, \n";
+        fwrite($errorFile, $txt);
+        fclose($errorFile);
+      }
+    }
+
+    
+	public function apiCalls(string $method, array $object = [], string $type = 'POST')
 	{
-		$userData = $this->getTableData("users", "user_id = '$user' OR uniq = '$user'");
-		if ($userData) {
-			$uniq = $userData['uniq'];
-			return $this->getTableData("user_details", " user_id = '$uniq' ");
-		} else { // its agent 
-			$agentData = $this->getTableData("agents", "user_id = '$user' OR uniq = '$user'");
-			if ($agentData != false) {
-				$userData =  $this->getTableData("users", "user_id = '$user'");
-				$uniq = $userData['uniq'];
-				return $this->getTableData("user_details", " user_id = '$uniq' ");
-			}
-		}
-	}
-	public function pageAdmins(string $pageID)
-	{
-		$object = [
-			'page' => $pageID,
-			'api_token' => $this->apiToken,
-		];
-
-		$response = (array) json_decode($this->phpPost($object, $this->apiUrl . 'market/pageAdmins/'));
-		if ($response['status'] == 200) {
-			$respObj =  (array) $response['message'];
-			$result = [];
-			foreach ($respObj as $key => $value) {
-				$result[$key] = (array) $value;
-			}
-
-			return $result;
-		} else {
-			return false;
-		}
-	}
-	public function pageInfo(string $pageID)
-	{
-		$object = [
-			'page' => $pageID,
-			'api_token' => $this->apiToken,
-		];
-
-		$response = (array) json_decode($this->phpPost($object, $this->apiUrl . 'market/pageInfo'));
-		if ($response['status'] == 200) {
-			$respObj =  (array) $response['message'];
-			$result = [];
-			foreach ($respObj as $key => $value) {
-				$result[$key] = (array) $value;
-			}
-
-			return $result;
-		} else {
-			return false;
-		}
+		$object = array_merge([
+			'key' => @$_SESSION['user']['api_key'],
+		], $object);
+		$responses = $this->cUrlGetData( $this->API_ENDPOINT . $method, $object, $type);
+		return $responses;
 	}
 
 
 
-	public function getLoggedUser()
-	{
-		$logID = '';
-		// $logID = 'N0202804';
-		// $this->USER_UNIQ = $logID;
-		// $this->USER_ID = $this->userInfo($logID, 'lki');
-		// return;
-		if (!isset($_SESSION['ckssusid']) && !empty($_SESSION['ckssusid'])) {
-			$logID = preg_replace('#[^a-zA-Z0-9]#i', '', $_SESSION['ckssusid']);
-			if (!empty($logID) && !empty($this->userInfo($logID, 'nm')['status'])) {
-				$this->USER_UNIQ = $logID;
-				$this->USER_ID = $this->userInfo($logID, 'lki');
-			}
-		}
-		// if (empty($logID)) {
-		// 	if (isset($_COOKIE['ckssusid_co']) && !empty($_COOKIE['ckssusid_co'])) {
-		// 		$logKey = preg_replace('#[^a-zA-Z0-9]#i', '', $_COOKIE['ckssusid_co']);
-		// 		$logID = $this->userInfo($logKey, 'lky');
-		// 		if (!empty($logID)) {
-		// 			$_SESSION['ckssusid'] = $logID;
-		// 			$this->USER_UNIQ = $logID;
-		// 			$this->USER_ID = $this->userInfo($logKey, 'lki');
-		// 		} else {
-		// 			$_SESSION['ckssusid'] = '';
-		// 			// @setcookie("ckssusid_co", '', strtotime('-10 days'), "/", "njofa.com", "", FALSE);
-		// 			@setcookie("ckssusid_co", '', strtotime('-10 days'), "/", "", "", FALSE);
-		// 			$this->USER_ID = '';
-		// 			$this->USER_UNIQ = '';
-		// 		}
-		// 	} else {
-		// 		$_SESSION['ckssusid'] = '';
-		// 		// @setcookie("ckssusid_co", '', strtotime('-10 days'), "/", "njofa.com", "", FALSE);
-		// 		@setcookie("ckssusid_co", '', strtotime('-10 days'), "/", "", "", FALSE);
-		// 		$this->USER_ID = '';
-		// 		$this->USER_UNIQ = '';
-		// 	}
-		// }
-		// die($_COOKIE['ckssusid_co']);
+    function cUrlGetData($url, $post_fields = null,  string $type = 'POST', $headers = null)
+    {
+        $ch = curl_init();
+        // $timeout = 5;
+        if ($type == 'POST') {
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+        } else {
+            $url .= '?' . http_build_query($post_fields);
+            curl_setopt($ch, CURLOPT_URL, $url);
+        }
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
+        if (is_array($headers)) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        }
 
-		return $logID;
-	}
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $data = curl_exec($ch);
+        if (curl_errno($ch)) {
+            // $this->pluginLogs('API_ERR', curl_error($ch));
+        }
 
-	public function logOutUser()
+        curl_close($ch);
+        return (array) json_decode($data, true);
+    }
+
+
+
+	/**
+	 * WORKING NJOFA MAIN API
+	 */
+	public function getApiToken() 
 	{
 
-		$_SESSION['ckssusid'] = '';
-		@$this->addCookie("ckssusid_co", '', '-10 days');//, "/", $this->cookieLocation, "", FALSE);
-		$this->USER_ID = '';
-		$this->USER_UNIQ = '';
-		// user wallet
-		$this->WALLET_UNIQ = '';
-		$this->WALLET_TYPE = '';
-		$this->WALLET_ID = '';
-		$this->USER_WALLET_KEY = '';
-		$_SESSION['ACTIVE_WALLET'] = '';
-		$_SESSION['WALLET_TYPE'] = '';
-
-		// @setcookie("WALLET_SESSION", '', strtotime('-10 days'), "/", $this->cookieLocation, "", FALSE);
-		$this->deleteCookie("agentLive");//, "/", $this->cookieLocation, "", FALSE);
-	}
-
-
-	public function getApiToken()
-	{
 		if (isset($_COOKIE['api_call_int']) && $_COOKIE['api_call_int'] == date('Ymd') && isset($_SESSION['API_ACCESS_TOKEN']) && strlen($_SESSION['API_ACCESS_TOKEN']) == 32) {
-			$this->apiToken = $_SESSION['API_ACCESS_TOKEN'];
+			$this->API_TOKEN = $_SESSION['API_ACCESS_TOKEN'];
 		} else {
 			$object = [
-				'api_user' => $this->apiUser,
-				'api_key' => $this->apiKey
+				'api_user' => $_ENV['NJOFA_API_USER'],// $this->apiUser,
+				'api_key' => $_ENV['NJOFA_API_KEY'],// $this->apiKey
 			];
 			// setcokkie for cookie
-
-			$response = (array) json_decode($this->phpPost($object, $this->apiUrl . 'engine/nauth/auth/')) ?: ['status' => ''];
+			$response = (array) json_decode($this->phpPost($object, $_ENV['NJOFA_API_ENDPOINT'] . 'engine/nauth/auth/')) ?: ['status' => ''];
 			if ($response['status'] == 200) {
 				$this->addCookie("api_call_int", date('Ymd'), '+1 day');//, "/", "", "", FALSE);
 				$_SESSION['API_ACCESS_TOKEN'] = $response['token'];
-				$this->apiToken = $response['token'];
+				$this->API_TOKEN = $response['token'];
 			}
 		}
+
+
 	}
 
-	public function createSlug(string $item, string $name, string $dir = '')
+	public function createSlug(string $name)
 	{
 		$name = strtolower($name);
 		$name = preg_replace('#[^a-zA-Z0-9 ]#i', '', $name);
@@ -514,20 +433,11 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		$name = rtrim($name, '-');
 		$name = ltrim($name, '-');
 		$name = substr($name, 0, 150);
-    
-		// $dbSlug = new \App\APP_NAME\Tables\DbSlugs();
-		// $dbSlug->rows->slug = $name;
-		// $dbSlug->rows->item_id = $item;
-		// $dbSlug->rows->directory = $dir;
-		// $id = $dbSlug->create();
-		// if (!$id) {
-		// 	$dbSlug->rows->slug = $name . '-' . $item;
-		// 	$id = $dbSlug->create();
-		// }
-		// return $id;
+		return $name;
 	}
 
-	function loginLoc()
+
+	function ipLocation() : array
 	{
 		$geo_arr = [];
 		if (!isset($_SESSION['USER_GEO_LOCATION']) || empty($_SESSION['USER_GEO_LOCATION']['CountryName'])) {
@@ -542,32 +452,13 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		$array['Region'] = @$geo_arr["State"];
 		$array['City'] = @$geo_arr["City"];
 		$array['Data'] = $geo_arr;
-		return serialize($array);
+		return $array;
 	}
 
 
-
-	public function userInfo(string $user, string $request)
-	{
-
-		$object = [
-			'user_uniq' => $user,
-			'request' => $request,
-			'api_token' => $this->apiToken,
-		];
-
-
-		$response = (array) json_decode($this->phpPost($object, $this->apiUrl . 'social/userInfo'));
-		if (@$response['status'] == 200) {
-			if ($object['request'] == 'av') {
-				$response['message'] = str_replace('src="', PARENT_URL, $response['message']);
-			}
-			return $response['message'];
-		} else {
-			return null;
-		}
-	}
-
+	/**
+	 * SEND POST REQUESTS
+	 */
 	function phpPost($data, $url)
 	{
 		if (is_array($data)) {
@@ -592,23 +483,6 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 	}
 
 
-	// param is assoc array [key => [vaue, operan]]
-	public function sqlExpress(array $param, string $attach = 'AND')
-	{
-		$express = '';
-		foreach ($param as $key => $value) {
-			$operan = $value[1];
-			$val = $value[0];
-			$express .= " $key $operan '$val' $attach";
-		}
-		if (strlen($express) > 0) {
-			$express = chop($express, $attach);
-		} else {
-			$expres = 1;
-		}
-
-		return $express;
-	}
 
 
 	public function getTableData(string $dbpage, $id, int $lim = null)
@@ -631,11 +505,11 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		}
 
 
-		if (strpos($dbpage, 'nj_') === FALSE && strpos($dbpage, $this->DATABASE_APPEND) === FALSE) {
+		if (strpos($dbpage, $this->DATABASE_APPEND) === FALSE) {
 			$dbpage = $this->DATABASE_APPEND . $dbpage;
 		}
 		$rowList = [];
-		$query = $this->in_query("SELECT * FROM $dbpage WHERE $id $limit") or die($this->dbm->error . $dbpage . $id);
+		$query = $this->query("SELECT * FROM $dbpage WHERE $id $limit") or die($this->db->error . $dbpage . $id);
 		if ($query->num_rows > 0) {
 			while ($row = $query->fetch_assoc()) {
 				if ($lim === null) {
@@ -667,8 +541,10 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		return $userAgents[$random];
 	}
 
-
-	function get_url_content($url, $cntx = false)
+	/**
+	 * get contents from a url
+	 */
+	function get_url_content($url, $cntx = false) : array
 	{
 		$cookiesIn = '';
 		$userAgent = $this->getRandomUserAgent(); //'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36';
@@ -712,7 +588,21 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 	}
 
 
+	/**
+	 * Return the body content of an input html
+	 */
+	function returnHtml(string $html)
+	{
+		$resultPos = strpos($html, '<body');
+		$resultPos2 = strpos($html, '</body');
+		$contentBody = substr($html, $resultPos, ($resultPos2 - $resultPos));
+		$contentBody = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $contentBody);
+		$contentBody = preg_replace('#<style(.*?)>(.*?)</style>#is', '', $contentBody);
+		$contentBody = "<!doctype html> <html>" . $contentBody . '</html>';
+		return $contentBody;
+	}
 
+	
 	// get client ip address
 	function getClientIp()
 	{
@@ -735,8 +625,10 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		return $ipaddress;
 	}
 
-	// get user browser info
-	function userBrowser()
+	/** 
+	 * get user browser info
+	 * */ 
+	function userBrowser() : array
 	{
 		$u_agent = $_SERVER['HTTP_USER_AGENT'];
 		$ub = 'unknown';
@@ -805,7 +697,10 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 	}
 	// get support browser
 
-	static function creatDir(string $folder)
+	/**
+	 * Create a directory including sub directories
+	 */
+	static function createDir(string $folder) : string
 	{
 		$folderX = rtrim($folder, '/');
 		$folderX .=  '/';
@@ -816,8 +711,10 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 	}
 
 
-
-	public function readCsv(string $file)
+	/**
+	 * READ CSV FILE AND RETURN ARRAY
+	 */
+	public function readCsv(string $file) : ARRAY
 	{
 		/* Map Rows and Loop Through Them */
 		$rows   = array_map('str_getcsv', file($file));
@@ -834,33 +731,15 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		return $csv;
 	}
 
-	public function sendSMS(string $phone, string $msg)
-	{
-		$msg = substr($msg, 0, 160);
-	}
-
-	function mysqli_real_escape_array(array $arr, $db = false)
-	{
-		if (!$db) {
-			return false;
-		}
-		$array = array();
-		foreach ($arr as $k => $v) {
-			if (is_array($v)) {
-				$array[mysqli_real_escape_string($db, $k)] = $this->mysqli_real_escape_array($v, $db);
-			} else {
-				$array[mysqli_real_escape_string($db, $k)] = mysqli_real_escape_string($db, $v);
-			}
-		}
-		return $arr;
-	}
-
+	/**
+	 * Remove get options used in pagination
+	 */
 	static function removeGetOptions(string $url, string $key)
 	{
 
 		$url = rtrim($url, '?');
 		$url = rtrim($url, '&');
-		$urlOrg = $url; // ?: $this->urlInView;
+		$urlOrg = $url; // ?: $this->URL_IN_VIEW;
 
 		$urlExp = explode($key . '=', $url);
 		if (count($urlExp) > 1) {
@@ -884,8 +763,10 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 		return $url;
 	}
 
-
-	public function paginate($count = 0, $rows = 10, $page = 0, $func = '') // func replace href with custom js function
+	/**
+	 * Do pagination
+	 */
+	public function paginate($count = 0, $rows = 10, $page = 0, $func = '') : string // func replace href with custom js function
 	{
 
 		$paginationLinks = '';
@@ -914,7 +795,7 @@ class Functions extends \App\APP_NAME\Config\AppAuthenticate
 
 
 
-			$url = $this::removeGetOptions($this->urlInView, 'pn');
+			$url = $this::removeGetOptions($this->URL_IN_VIEW, 'pn');
 
 
 
